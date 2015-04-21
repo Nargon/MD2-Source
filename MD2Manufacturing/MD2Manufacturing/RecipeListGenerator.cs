@@ -22,7 +22,8 @@ namespace MD2
             }
             foreach (var def in DefDatabase<RecipeDef>.AllDefs.Where(d => d.workSkill != null && (d.workSkill == SkillDefOf.Crafting || d.workSkill == SkillDefOf.Cooking || d.workSkill == SkillDefOf.Artistic)))
             {
-                list.Add(def);
+                if(!list.Contains(def))
+                    list.Add(def);
             }
             foreach (var def in DefDatabase<ManufacturingPlantRecipesDef>.AllDefs)
             {
