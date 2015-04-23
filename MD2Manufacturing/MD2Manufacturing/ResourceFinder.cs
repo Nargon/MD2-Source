@@ -27,7 +27,7 @@ namespace MD2
                 {
                     foreach(var thing in cell.GetThingList())
                     {
-                        if(thing.def.eType==EntityType.Chunk && !thingsFound.Contains(thing))
+                        if(thing.def.category==EntityCategory.Item && thing.def.defName.Contains("Chunk") && !thingsFound.Contains(thing))
                         {
                             thingsFound.Add(thing);
                         }

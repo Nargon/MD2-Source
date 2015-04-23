@@ -7,17 +7,17 @@ using Verse;
 
 namespace MD2
 {
-    public class ManufacturingPlantDialog : Layer
+    public class ManufacturingPlantDialog : Layer_Window
     {
         protected AssemblyLine parent;
 
         public ManufacturingPlantDialog(AssemblyLine parent, string title = "", string helpMessage="", float width=600, float height=700)
         {
             base.SetCentered(width, height);
-            this.category = LayerCategory.GameDialog;
             this.absorbAllInput = true;
+            this.drawPriority = 2000;
             this.forcePause = false;
-            this.clearNonEditDialogs = false;
+            this.clearNonEditWindows = false;
             this.closeOnEscapeKey = true;
             this.doCloseX = true;
             this.message = helpMessage;

@@ -11,7 +11,6 @@ namespace MD2
         private AssemblyLineUpgradeDef def;
         private BillOfMaterials billOfMaterials=new BillOfMaterials();
         private int workRemaining = 0;
-
         public AssemblyLineUpgrade(AssemblyLineUpgradeDef def)
         {
             this.def = def;

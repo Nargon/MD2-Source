@@ -37,7 +37,7 @@ namespace MD2
             //Check if this has started digging
             if (!this.started)
             {
-                this.powerTrader.powerOutput = -1f;
+                this.powerTrader.powerOutputInt = -1f;
                 return;
             }
             if (running && (Find.TickManager.TicksGame % 100) == 0 && Rand.Value < 20f / GenDate.TicksPerDay)
@@ -47,13 +47,13 @@ namespace MD2
             if (this.running)
             {
                 //Set the power usage according to the fissure size being generated
-                this.powerTrader.powerOutput = powerUsage(this.fissureSize);
+                this.powerTrader.powerOutputInt = powerUsage(this.fissureSize);
                 //Check if this has initialised, if not then initialise. This is done only once, when the fissure to produce has been chosen.
                 if (!this.initialised)
                 {
                     this.tickAmountToGen = randomDigTime(this.fissureSize);
                     this.ticksRemaining = this.tickAmountToGen;
-                    if (Game.godMode)
+                    if (Game.GodMode)
                     {
                         this.tickAmountToGen = 100;
                         this.ticksRemaining = 100;
@@ -73,7 +73,7 @@ namespace MD2
             else
             {
                 //Stop using power if it is paused
-                this.powerTrader.powerOutput = 0f;
+                this.powerTrader.powerOutputInt = 0f;
             }
         }
 

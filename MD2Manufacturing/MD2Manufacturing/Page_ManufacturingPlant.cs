@@ -7,7 +7,7 @@ using Verse;
 
 namespace MD2
 {
-    public abstract class Page_ManufacturingPlant : Layer
+    public abstract class Page_ManufacturingPlant : Layer_Window
     {
         protected string message = "";
         protected AssemblyLine line;
@@ -21,9 +21,9 @@ namespace MD2
         {
             this.message = message;
             this.line = line;
+            this.drawPriority = 2000;
             base.SetCentered(WinSize);
-            this.category = LayerCategory.GameDialog;
-            this.clearNonEditDialogs = true;
+            this.clearNonEditWindows = true;
             this.absorbAllInput = true;
             this.closeOnEscapeKey = true;
             this.forcePause = false;

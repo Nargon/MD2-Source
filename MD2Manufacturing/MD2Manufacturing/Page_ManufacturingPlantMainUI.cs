@@ -92,7 +92,7 @@ namespace MD2
                 if (MPmanager.manager.CanAddAssemblyLine)
                 {
                     string costString = "";
-                    if (Game.godMode && AssemblyLine.Settings.instaBuild)
+                    if (Game.GodMode && AssemblyLine.Settings.instaBuild)
                         costString = "Nothing".Translate();
                     else
                     {
@@ -103,7 +103,7 @@ namespace MD2
                     }
                     Find.LayerStack.Add(new Dialog_Confirm("BuildNewAssemblyLineDialog".Translate(costString, TicksToTime.GetTime((float)AssemblyLine.ConstructionTicksRequired)), delegate
                     {
-                        MPmanager.manager.AddNewAssemblyLine((Game.godMode && AssemblyLine.Settings.instaBuild));
+                        MPmanager.manager.AddNewAssemblyLine((Game.GodMode && AssemblyLine.Settings.instaBuild));
                     }));
                 }
                 else

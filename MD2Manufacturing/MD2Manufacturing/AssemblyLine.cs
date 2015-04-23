@@ -72,7 +72,7 @@ namespace MD2
         {
             get
             {
-                if (Game.godMode)
+                if (Game.GodMode)
                 {
                     if (AssemblyLine.Settings.instaBuild)
                         return 1;

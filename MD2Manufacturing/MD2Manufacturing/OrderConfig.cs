@@ -243,7 +243,7 @@ namespace MD2
                 float tfheight = rect.height - curY - adjustButHeight - margin;
                 Rect thingFilterRect = new Rect(0f, curY, rect.width, tfheight);
                 curY += tfheight + margin;
-                ThingFilterGui.DoThingFilterConfigWindow(thingFilterRect, ref this.scrollPosition, this.ingredientsFilter, this.recipe.fixedIngredientFilter);
+                ThingFilterUI.DoThingFilterConfigWindow(thingFilterRect, ref this.scrollPosition, this.ingredientsFilter, this.recipe.fixedIngredientFilter);
                 //Well that wasn't so hard after all
                 float checkWidth = rect.width / 2 - 30f;
                 float checkXPos = rect.width / 2 - (checkWidth / 2);

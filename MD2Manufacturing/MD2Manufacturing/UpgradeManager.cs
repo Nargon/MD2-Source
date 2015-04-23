@@ -173,7 +173,7 @@ namespace MD2
                     s = upgrade.BillOfMaterials.ReportString;
                 }
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Rect progressRect = new Rect(innerRect.width / 2-(Text.CalcSize(s).x), 0, innerRect.width, innerRect.height);
+                Rect progressRect = new Rect(innerRect.width / 2-(Text.CalcSize(s).x), innerRect.yMin, innerRect.width, innerRect.height);
                 Widgets.Label(progressRect, s);
             }
             finally

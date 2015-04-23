@@ -22,14 +22,14 @@ namespace MD2
         {
             if(Power!=null)
             {
-                Power.powerOutput = MPmanager.manager.PowerUsage;
+                Power.powerOutputInt = MPmanager.manager.PowerUsage;
             }
             base.Tick();
         }
 
-        public override IEnumerable<FloatMenuOption> GetFloatMenuOptionsFor(Pawn myPawn)
+        public override IEnumerable<FloatMenuOption> FloatMenuOptions(Pawn myPawn)
         {
-            foreach(var m in base.GetFloatMenuOptionsFor(myPawn))
+            foreach(var m in base.FloatMenuOptions(myPawn))
             {
                 yield return m;
             }

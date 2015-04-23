@@ -30,7 +30,7 @@ namespace MD2
             base.SpawnSetup();
             power = base.GetComp<CompPowerTrader>();
             glower = base.GetComp<CompGlower>();
-            powerOutput = power.powerOutput;
+            powerOutput = power.powerOutputInt;
         }
 
         public override void Tick()
@@ -110,7 +110,7 @@ namespace MD2
                 if (HasFuel && isActive)
                 {
                     UseFuel();
-                    power.powerOutput = powerOutput;
+                    power.powerOutputInt = powerOutput;
                     if(glower!=null)
                     {
                         glower.Lit = true;
@@ -122,7 +122,7 @@ namespace MD2
                 }
                 else
                 {
-                    power.powerOutput = 0;
+                    power.powerOutputInt = 0;
                     if(glower!=null)
                     {
                         glower.Lit = false;
@@ -186,23 +186,20 @@ namespace MD2
         {
             get
             {
-                ThingDef def = ThingDef.Named("MD2CoalFeeder");
-                List<CoalFeeder> feeders = new List<CoalFeeder>();
                 foreach (IntVec3 current in GenAdj.CellsAdjacentCardinal(this))
                 {
                     foreach(Thing thing in Find.ThingGrid.ThingsAt(current))
                     {
-                        if (thing.def == def)
-                            feeders.Add((CoalFeeder)thing);
+                        if (thing is CoalFeeder)
+                        {
+                            CoalFeeder feeder = thing as CoalFeeder;
+                            if (feeder.HasFuelItem)
+                                return feeder;
+                            else
+                                continue;
+                        }
                     }
                 }
-                CoalFeeder feeder = null;
-                if(feeders.Count>0)
-                {
-                    feeder = feeders.Where((CoalFeeder cFeeder) => cFeeder.HasFuelItem).First();
-                }
-                if (feeder != null)
-                    return feeder;
                 return null;
             }
         }
