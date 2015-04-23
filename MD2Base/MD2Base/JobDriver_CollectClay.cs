@@ -11,15 +11,11 @@ namespace MD2
     {
         private const TargetIndex CellInd = TargetIndex.A;
 
-        public JobDriver_CollectClay(Pawn pawn) : base(pawn)
-        {
-        }
-
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnBurningImmobile(CellInd);
 
-            yield return Toils_Reserve.Reserve(CellInd, ReservationType.Total);
+            yield return Toils_Reserve.Reserve(CellInd);
 
             yield return Toils_Goto.GotoCell(CellInd, PathMode.Touch);
 

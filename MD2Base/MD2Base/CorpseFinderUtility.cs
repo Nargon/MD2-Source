@@ -12,7 +12,7 @@ namespace MD2
     {
         public static Thing FindClosestCorpse(Pawn getter)
         {
-            Predicate<Thing> predicate = (Thing c) => (c is Corpse) && !((Corpse)c).innerPawn.RaceProps.IsAnimal && !c.IsBuried() && !c.IsForbidden(Faction.OfColony) && getter.AwareOf(c) && getter.CanReserve(c, ReservationType.Total);
+            Predicate<Thing> predicate = (Thing c) => (c is Corpse) && !((Corpse)c).innerPawn.RaceProps.Animal && !((Corpse)c).innerPawn.RaceProps.mechanoid && !c.IsBuried() && !c.IsForbidden(Faction.OfColony) && getter.AwareOf(c) && getter.CanReserve(c);
             ThingRequest thingReq = ThingRequest.ForGroup(ThingRequestGroup.Corpse);
             return GenClosest.ClosestThingReachable(getter.Position, thingReq, PathMode.ClosestTouch, TraverseParms.For(getter), 9999f, predicate, null);
         }

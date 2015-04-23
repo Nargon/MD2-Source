@@ -8,7 +8,7 @@ namespace MD2
 {
     public class PlaceWorker_MaximumFive : PlaceWorker
     {
-        public override AcceptanceReport AllowsPlacing(EntityDef checkingDef, IntVec3 loc, IntRot rot)
+        public override AcceptanceReport AllowsPlacing(EntityDef checkingDef, IntVec3 loc, Rot4 rot)
         {
             ThingDef def = checkingDef as ThingDef;
             if(def!=null)

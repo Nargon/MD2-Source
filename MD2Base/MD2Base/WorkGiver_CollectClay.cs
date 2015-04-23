@@ -18,17 +18,13 @@ namespace MD2
             }
         }
 
-        public WorkGiver_CollectClay(WorkGiverDef giverDef):base(giverDef)
-        {
-        }
-
         public override IEnumerable<IntVec3> PotentialWorkCellsGlobal(Pawn pawn)
         {
             List<IntVec3> cells = new List<IntVec3>();
             foreach(var designation in Find.DesignationManager.DesignationsOfDef(DefDatabase<DesignationDef>.GetNamed("MD2CollectClay")))
             {
                 IntVec3 cell = designation.target.Cell;
-                if(cell!=null && cell.InBounds()&&pawn.CanReserveAndReach(designation.target,ReservationType.Total,PathMode.Touch,Danger.Some))
+                if(cell!=null && cell.InBounds()&&pawn.CanReserveAndReach(designation.target,PathMode.Touch,Danger.Some))
                 {
                     cells.Add(designation.target.Cell);
                 }
@@ -43,7 +39,7 @@ namespace MD2
 
         public override bool HasJobOnCell(Pawn pawn, IntVec3 c)
         {
-            return pawn.Faction == Faction.OfColony && Find.DesignationManager.DesignationAt(c, DefDatabase<DesignationDef>.GetNamed("MD2CollectClay")) != null && pawn.CanReserveAndReach(c, ReservationType.Total, PathMode.Touch, Danger.Some);
+            return pawn.Faction == Faction.OfColony && Find.DesignationManager.DesignationAt(c, DefDatabase<DesignationDef>.GetNamed("MD2CollectClay")) != null && pawn.CanReserveAndReach(c, PathMode.Touch, Danger.Some);
         }
 
         public override Job JobOnCell(Pawn pawn, IntVec3 cell)

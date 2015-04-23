@@ -11,10 +11,6 @@ namespace MD2
     public class DroidCremateJob : JobDriver
     {
         private const TargetIndex CorpseIndex = TargetIndex.A;
-        public DroidCremateJob(Pawn pawn)
-            : base(pawn)
-        {
-        }
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
@@ -23,7 +19,7 @@ namespace MD2
             this.FailOnBurningImmobile(CorpseIndex);
 
             //Reserve the corpse
-            yield return Toils_Reserve.Reserve(CorpseIndex, ReservationType.Total);
+            yield return Toils_Reserve.Reserve(CorpseIndex);
             //Go to the corpse
             yield return Toils_Goto.GotoThing(TargetIndex.A, PathMode.ClosestTouch);
             Toil toil = new Toil();

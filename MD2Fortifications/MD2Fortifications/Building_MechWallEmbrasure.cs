@@ -58,7 +58,7 @@ namespace MD2
                 IntVec3 pos = base.Position;
                 Thing wall = ThingMaker.MakeThing(MechWallExtended, this.Stuff);
                 wall.SetFactionDirect(Faction.OfColony);
-                wall.Health = this.Health;
+                wall.HitPoints = this.HitPoints;
                 this.Destroy();
                 DoDustPuff();
                 GenSpawn.Spawn(wall, pos);
@@ -73,7 +73,7 @@ namespace MD2
                 IntVec3 pos = base.Position;
                 Thing floor = ThingMaker.MakeThing(MechWallRecessed, this.Stuff);
                 floor.SetFactionDirect(Faction.OfColony);
-                floor.Health = this.Health;
+                floor.HitPoints = this.HitPoints;
                 this.Destroy();
                 DoDustPuff();
                 GenSpawn.Spawn(floor, pos);

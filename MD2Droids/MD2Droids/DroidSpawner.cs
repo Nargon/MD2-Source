@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class DroidSpawner : ThingWithComponents
+    public class DroidSpawner : ThingWithComps
     {
         public int i = 0;
         public override void SpawnSetup()

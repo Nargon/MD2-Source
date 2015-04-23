@@ -27,7 +27,7 @@ namespace MD2
             GenUI.RenderMouseoverBracket();
         }
 
-        public override AcceptanceReport CanDesignateAt(IntVec3 loc)
+        public override AcceptanceReport CanDesignateCell(IntVec3 loc)
         {
             if (!GenGrid.InBounds(loc))
                 return false;
@@ -56,7 +56,7 @@ namespace MD2
             }
         }
 
-        public override void DesignateSingle(IntVec3 c)
+        public override void DesignateSingleCell(IntVec3 c)
         {
             Find.DesignationManager.AddDesignation(new Designation(c, DefDatabase<DesignationDef>.GetNamed("MD2CollectSand")));
         }

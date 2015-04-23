@@ -30,7 +30,7 @@ namespace MD2
 
         private void CheckResearch()
         {
-            if (Game.godMode)
+            if (Game.GodMode)
             {
                 foreach (ResearchRecipeDef c in recipeList)
                 {

@@ -33,8 +33,8 @@ namespace MD2
                 maxEnergy = ((DroidKindDef)this.kindDef).maxEnergy;
             else
                 Log.Error("Max energy for " + this.ToString() + " was zero or below");
-            this.bodyGraphic = GraphicDatabase.Get<Graphic_Multi>(((DroidKindDef)this.kindDef).standardBodyGraphicPath, ShaderDatabase.Cutout, IntVec2.one, Color.white);
-            this.headGraphic = GraphicDatabase.Get<Graphic_Multi>(((DroidKindDef)this.kindDef).headGraphicPath, ShaderDatabase.Cutout,IntVec2.one,Color.white);
+            this.bodyGraphic = GraphicDatabase.Get<Graphic_Multi>(((DroidKindDef)this.kindDef).standardBodyGraphicPath, ShaderDatabase.Cutout, IntVec2.One, Color.white);
+            this.headGraphic = GraphicDatabase.Get<Graphic_Multi>(((DroidKindDef)this.kindDef).headGraphicPath, ShaderDatabase.Cutout,IntVec2.One,Color.white);
             DoGraphicChanges();
         }
 
@@ -193,7 +193,7 @@ namespace MD2
 
         private void CureDiseases()
         {
-            IEnumerable<Hediff_Staged> diseases = this.healthTracker.hediffSet.GetDiseases();
+            IEnumerable<Hediff_Staged> diseases = this.health.hediffSet.GetDiseases();
             if (diseases != null)
             {
                 foreach (Hediff_Staged d in diseases)
@@ -207,10 +207,10 @@ namespace MD2
         {
             if (Find.TickManager.TicksGame % Settings.healDelayTicks == 0)
             {
-                IEnumerable<Hediff_InjuryLocal> treatableInjuries = this.healthTracker.hediffSet.GetInjuriesLocalTreatable();
+                IEnumerable<Hediff_Injury> treatableInjuries = this.health.hediffSet.GetInjuriesLocalTreatable();
                 foreach (var current in treatableInjuries)
                 {
-                    if (!current.IsTreatedAndHealing)
+                    if (!current.IsTreatedAndHealing())
                     {
                         current.treatedWithMedicine = true;
                         current.treatmentQuality = 1f;

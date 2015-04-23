@@ -9,11 +9,7 @@ namespace MD2
 {
     class DroidChargeJob : JobDriver
     {
-        public DroidChargeJob(Pawn pawn)
-            : base(pawn)
-        {
 
-        }
         protected override IEnumerable<Toil> MakeNewToils()
         {
 

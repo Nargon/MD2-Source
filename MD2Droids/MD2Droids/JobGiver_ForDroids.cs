@@ -8,7 +8,7 @@ using Verse.AI;
 
 namespace MD2
 {
-    public class JobGiver_ForDroids : JobGiver_WorkRoot
+    public class JobGiver_ForDroids : JobGiver_Work
     {
         private List<WorkGiver> workGivers = new List<WorkGiver>();
         public IEnumerable<WorkGiver> AllWorkGivers
@@ -47,14 +47,14 @@ namespace MD2
             if(Find.PlaySettings.useWorkPriorities)
             { 
                 list = droidKindDef(pawn).allowedWorkTypeDefs.Where((WorkTypeDef def)=>pawn.workSettings.WorkIsActive(def)).ToList();
-                list = list.OrderBy(c=>!c.emergency).ThenBy(a => pawn.workSettings.GetPriority(a)).ThenByDescending(b => b.naturalPriority).ToList();
+                list = list.OrderBy(a => pawn.workSettings.GetPriority(a)).ThenByDescending(b => b.naturalPriority).ToList();
                 //foreach (var c in list)
                 //    Log.Message(c.defName);
             }
             else
             {
                 list = droidKindDef(pawn).allowedWorkTypeDefs.Where((WorkTypeDef def) => pawn.workSettings.WorkIsActive(def)).ToList();
-                list=list.OrderBy(c=>!c.emergency).ThenByDescending(b=>b.naturalPriority).ToList();
+                list=list.OrderByDescending(b=>b.naturalPriority).ToList();
                 //foreach (var c in list)
                 //    Log.Message(c.defName);
             }
@@ -72,7 +72,7 @@ namespace MD2
                             {
                                 break;
                             }
-                                if (giver.MissingRequiredActivity(pawn) == null && !giver.ShouldSkip(pawn))
+                                if (giver.MissingRequiredCapacity(pawn) == null && !giver.ShouldSkip(pawn))
                                 {
                                     try
                                     {
