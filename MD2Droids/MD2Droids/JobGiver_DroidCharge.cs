@@ -28,6 +28,8 @@ namespace MD2
                 return null;
             }
             Droid droid = (Droid)pawn;
+            if (!droid.Active)
+                return null;
             //Check the charge level
             if (droid.TotalCharge < droid.maxEnergy * chargeThreshold)
             {

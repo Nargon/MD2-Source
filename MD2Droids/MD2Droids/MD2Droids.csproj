@@ -33,7 +33,7 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.9.5532.29361, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RimWorld783Win\RimWorld783Win_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="MD2Base">
       <HintPath>..\..\MD2Base\MD2Base\bin\Debug\MD2Base.dll</HintPath>
@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RimWorld783Win\RimWorld783Win_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +61,7 @@
     <Compile Include="DroidChargerFinder.cs" />
     <Compile Include="DroidCorpse.cs" />
     <Compile Include="DroidCremateJob.cs" />
+    <Compile Include="DroidDeactivatedJob.cs" />
     <Compile Include="DroidGenerator.cs" />
     <Compile Include="DroidJobDefs.cs" />
     <Compile Include="DroidKindDef.cs" />
@@ -75,7 +76,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld783Win\Mods\MD2Droids\Assemblies"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld785Win\Mods\MD2Droids\Assemblies"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

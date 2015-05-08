@@ -7,7 +7,7 @@ using Verse.AI;
 
 namespace MD2
 {
-    class DroidChargeJob : JobDriver
+    public class DroidChargeJob : JobDriver
     {
 
         protected override IEnumerable<Toil> MakeNewToils()

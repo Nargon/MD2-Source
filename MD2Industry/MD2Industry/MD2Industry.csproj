@@ -50,6 +50,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cart.cs" />
+    <Compile Include="CartDef.cs" />
+    <Compile Include="CartDrawer.cs" />
+    <Compile Include="CartGenerator.cs" />
+    <Compile Include="CartPather.cs" />
     <Compile Include="ClayCollector.cs" />
     <Compile Include="Extractor.cs" />
     <Compile Include="FissureClass.cs" />
@@ -58,6 +63,7 @@
     <Compile Include="MinerResourceDef.cs" />
     <Compile Include="PlacementRestrictor_OnFissure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Track.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

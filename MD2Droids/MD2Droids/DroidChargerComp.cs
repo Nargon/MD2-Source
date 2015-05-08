@@ -57,13 +57,13 @@ namespace MD2
                 InternalCharge foundDroid = (InternalCharge)pawn;
                 if (power.PowerOn && foundDroid.DesiresCharge())
                 {
-                    power.powerOutput = -usageRate * power.props.basePowerConsumption;
-                    foundDroid.Charge(-power.powerOutput);
+                    power.powerOutputInt = -usageRate * power.props.basePowerConsumption;
+                    foundDroid.Charge(-power.powerOutputInt);
                 }
             }
             else
             {
-                power.powerOutput = -usageRate * power.props.basePowerConsumption;
+                power.powerOutputInt = -usageRate * power.props.basePowerConsumption;
             }
         }
     }

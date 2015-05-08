@@ -55,20 +55,42 @@ namespace MD2
                     initialised = true;
                 }
             }
-            needs.food.CurLevel = 100f;
-            needs.mood.CurLevel = 100f;
-            needs.rest.CurLevel = 100f;
+            RefillNeeds();
             CureDiseases();
             HealDamages();
             CheckPowerRemaining();
-            if (!active)
-                return;
             base.Tick();
-            if (!ChargingNow)
+            if (!Active)
             {
-                Deplete(EnergyUseRate);
+                if (pather.Moving)
+                    pather.StopDead();
+                if(jobs.curJob.def!=DroidDeactivatedJob.Def)
+                {
+                    jobs.StopAll();
+                    jobs.StartJob(new Verse.AI.Job(DroidDeactivatedJob.Def));
+                }
             }
+            else
+            {
+                if (!ChargingNow)
+                {
+                    Deplete(EnergyUseRate);
+                }
+            }
+        }
 
+        private void RefillNeeds()
+        {
+            if (Find.TickManager.TicksGame % 180 == 0)
+            {
+                foreach (Need n in this.needs.AllNeeds)
+                {
+                    if (n.CurLevel < 90)
+                    {
+                        n.CurLevel = 100f;
+                    }
+                }
+            }
         }
 
         public override void ExposeData()
@@ -135,21 +157,31 @@ namespace MD2
             com.action = () =>
             {
                 this.active = !this.active;
+                if(!active)
+                {
+                    jobs.StopAll();
+                    jobs.StartJob(new Verse.AI.Job(DroidDeactivatedJob.Def));
+                }
+                else
+                {
+                    jobs.StopAll();
+                }
             };
             yield return com;
-            /* Command_Action a = new Command_Action();
-             a.action = () =>
-             {
-                 this.Destroy(DestroyMode.Kill);
-             };
-             a.activateSound = SoundDefOf.Click;
-             a.defaultDesc = "Click this button to cause the droid to self destruct";
-             a.defaultLabel = "Self Destruct";
-             a.disabled = false;
-             a.groupKey = 313740004;
-             a.icon = this.SDIcon;
-             yield return a;*/
         }
+        //    /* Command_Action a = new Command_Action();
+        //     a.action = () =>
+        //     {
+        //         this.Destroy(DestroyMode.Kill);
+        //     };
+        //     a.activateSound = SoundDefOf.Click;
+        //     a.defaultDesc = "Click this button to cause the droid to self destruct";
+        //     a.defaultLabel = "Self Destruct";
+        //     a.disabled = false;
+        //     a.groupKey = 313740004;
+        //     a.icon = this.SDIcon;
+        //     yield return a;*/
+        //}
 
         public SettingsDef Settings
         {
@@ -198,8 +230,16 @@ namespace MD2
             {
                 foreach (Hediff_Staged d in diseases)
                 {
-                    d.Treated(1f);
+                    d.DirectHeal(1000f);
                 }
+            }
+        }
+
+        public SettingsDef Config
+        {
+            get
+            {
+                return ((DroidKindDef)this.kindDef).Settings;
             }
         }
 
@@ -212,9 +252,7 @@ namespace MD2
                 {
                     if (!current.IsTreatedAndHealing())
                     {
-                        current.treatedWithMedicine = true;
-                        current.treatmentQuality = 1f;
-                        current.DirectHeal(100);
+                        current.DirectHeal(1000000f);
                         break;
                     }
                 }

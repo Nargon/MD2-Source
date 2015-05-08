@@ -19,6 +19,8 @@ namespace MD2
             droid.thinker = new Pawn_Thinker(droid);
             droid.TotalCharge = (((DroidKindDef)kindDef).maxEnergy * 0.3f);
 
+            droid.playerController = new Pawn_PlayerController(droid);
+            droid.outfits = new Pawn_OutfitTracker(droid);
             droid.inventory = new Pawn_InventoryTracker(droid);
             droid.pather = new Pawn_PathFollower(droid);
             droid.jobs = new Pawn_JobTracker(droid);
@@ -26,27 +28,22 @@ namespace MD2
             droid.ageTracker = new Pawn_AgeTracker(droid);
             droid.filth = new Pawn_FilthTracker(droid);
             droid.mindState = new Pawn_MindState(droid);
-            droid.needs = new Pawn_NeedsTracker(droid);
             droid.equipment = new Pawn_EquipmentTracker(droid);
+            droid.natives = new Pawn_NativeVerbs(droid);
+            droid.meleeVerbs = new Pawn_MeleeVerbs(droid);
             droid.carryHands = new Pawn_CarryHands(droid);
             droid.apparel = new Pawn_ApparelTracker(droid);
             droid.ownership = new Pawn_Ownership(droid);
             droid.skills = new Pawn_SkillTracker(droid);
-            droid.talker = new Pawn_TalkTracker(droid);
+            //droid.talker = new Pawn_TalkTracker(droid);
             droid.story = new Pawn_StoryTracker(droid);
             droid.workSettings = new Pawn_WorkSettings(droid);
             droid.guest = new Pawn_GuestTracker(droid);
-            droid.needs.mood = new Need_Mood(droid);
-            droid.needs.space = new Need_Space(droid);
-            droid.needs.beauty = new Need_Beauty(droid);
-            if (droid.RaceProps.EatsFood)
+            droid.needs = new Pawn_NeedsTracker(droid);
+            droid.timetable = new Pawn_TimetableTracker();
+            for (int i = 0; i < droid.timetable.times.Count; i++)
             {
-                droid.needs.food = new Need_Food(droid);
-            }
-            //Log.Message("4");
-            if (droid.RaceProps.needsRest)
-            {
-                droid.needs.rest = new Need_Rest(droid);
+                droid.timetable.SetAssignment(i, TimeAssignment.Work);
             }
             if (droid.RaceProps.hasGenders)
             {
@@ -59,21 +56,21 @@ namespace MD2
             droid.ageTracker.SetChronologicalBirthDate(GenDate.CurrentYear, GenDate.DayOfMonth);
 
             //Log.Message("5");
-                droid.story.skinColor = PawnSkinColors.PaleWhiteSkin;
-                droid.story.crownType = CrownType.Narrow;
-                droid.story.headGraphicPath = GraphicDatabaseHeadRecords.GetHeadRandom(droid.gender, droid.story.skinColor, droid.story.crownType).GraphicPath;
-                droid.story.hairColor = PawnHairColors.RandomHairColor(droid.story.skinColor, droid.ageTracker.AgeBiologicalYears);
-                droid.backstoryKey = kindDef.backstoryName;
-                droid.story.childhood = DroidBackstories.GetBackstoryFor(kindDef.backstoryName);
-                droid.story.adulthood = DroidBackstories.GetBackstoryFor(kindDef.backstoryName);
-                droid.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", true);
-                PawnName name = DroidBS.DroidName(kindDef.label);
-                droid.story.name = name;
+            droid.story.skinColor = PawnSkinColors.PaleWhiteSkin;
+            droid.story.crownType = CrownType.Narrow;
+            droid.story.headGraphicPath = GraphicDatabaseHeadRecords.GetHeadRandom(droid.gender, droid.story.skinColor, droid.story.crownType).GraphicPath;
+            droid.story.hairColor = PawnHairColors.RandomHairColor(droid.story.skinColor, droid.ageTracker.AgeBiologicalYears);
+            droid.backstoryKey = kindDef.backstoryName;
+            droid.story.childhood = DroidBackstories.GetBackstoryFor(kindDef.backstoryName);
+            droid.story.adulthood = DroidBackstories.GetBackstoryFor(kindDef.backstoryName);
+            droid.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", true);
+            PawnName name = DroidBS.DroidName(kindDef.label);
+            droid.story.name = name;
 
             foreach (SkillRecord sk in droid.skills.skills)
             {
-                sk.level = 15;
-                sk.passion = Passion.Major;
+                sk.level = (droid.Config.skillLevel > 20 && !(droid.Config.skillLevel < 0)) ? 20 : droid.Config.skillLevel;
+                sk.passion = droid.Config.passion;
             }
             PawnInventoryGenerator.GenerateInventoryFor(droid);
             //PawnInventoryGenerator.GiveAppropriateKeysTo(droid);

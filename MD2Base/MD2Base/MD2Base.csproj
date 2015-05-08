@@ -52,7 +52,10 @@
     <Compile Include="DesignatorDef.cs" />
     <Compile Include="Designator_CollectClay.cs" />
     <Compile Include="Designator_CollectSand.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="DirectionExt.cs" />
     <Compile Include="DSUDef.cs" />
+    <Compile Include="IntVec3Ext.cs" />
     <Compile Include="Itab_ModInit.cs" />
     <Compile Include="JobDriver_CollectClay.cs" />
     <Compile Include="JobDriver_CollectSand.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="SandFiller.cs" />
     <Compile Include="SettingsDef.cs" />
     <Compile Include="SpawnRadial.cs" />
+    <Compile Include="StatExt.cs" />
     <Compile Include="TexButton.cs" />
     <Compile Include="ThingExtension.cs" />
     <Compile Include="TicksToTime.cs" />
