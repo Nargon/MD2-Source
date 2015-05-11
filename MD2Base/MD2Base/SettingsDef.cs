@@ -24,5 +24,8 @@ namespace MD2
         public int healDelayTicks;
         public int skillLevel = 5;
         public RimWorld.Passion passion = RimWorld.Passion.None;
+
+        //Cart settings
+        public bool drawTrackDebug = false;
     }
 }

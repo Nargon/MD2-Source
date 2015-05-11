@@ -68,6 +68,7 @@
     <Compile Include="PlaceWorker_OnMudAndWater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResearchRecipeDef.cs" />
+    <Compile Include="Rot4Ext.cs" />
     <Compile Include="SandFiller.cs" />
     <Compile Include="SettingsDef.cs" />
     <Compile Include="SpawnRadial.cs" />

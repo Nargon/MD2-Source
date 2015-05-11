@@ -10,8 +10,32 @@ namespace MD2
 {
     public class Cart : ThingWithComps
     {
-        public CartPather pather;
-        public CartDrawer drawer;
+        public Cart_Pather pather;
+        public Cart_DrawerTracker drawer;
+        public Cart_GraphicSet graphics;
+
+        public Cart()
+        {
+            //Placeholders, will be moved to cart generator.
+            pather = new Cart_Pather(this);
+            drawer = new Cart_DrawerTracker(this);
+
+            graphics = new Cart_GraphicSet(this);
+        }
+        
+        public CartDef Def
+        {
+            get
+            {
+                return this.def as CartDef;
+            }
+        }
+
+        public override void SpawnSetup()
+        {
+            base.SpawnSetup();
+            graphics.ResolveGraphics();
+        }
 
         public override void ExposeData()
         {
@@ -44,6 +68,13 @@ namespace MD2
             }
             int value = Mathf.RoundToInt(num2);
             return Mathf.Clamp(value, 1, 450);
+        }
+
+        public override void Tick()
+        {
+            base.Tick();
+            pather.Tick();
+            drawer.Tick();
         }
     }
 }

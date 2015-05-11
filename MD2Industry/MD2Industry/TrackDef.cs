@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Verse;
 
 namespace MD2
 {
-    public enum Direction
+    public class TrackDef : ThingDef
     {
-        Up,
-        Down,
-        Left,
-        Right,
-        Any
+        public string trackGraphicPath;
     }
 }
