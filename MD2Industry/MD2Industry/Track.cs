@@ -11,15 +11,13 @@ namespace MD2
     {
         public static readonly SettingsDef Config = DefDatabase<SettingsDef>.GetNamed("MD2CartSettings");
 
-        private List<Track> connectedTracks = new List<Track>();
-
         public override void Draw()
         {
             base.Draw();
 
             if (Config.drawTrackDebug)
             {
-                foreach (var track in connectedTracks)
+                foreach (var track in AllConnectedTracks)
                 {
                     GenDraw.DrawTargetHighlight(track);
                 }
@@ -30,201 +28,201 @@ namespace MD2
         {
             get
             {
-                return connectedTracks.Count;
+                return AllConnectedTracks.Count;
             }
         }
 
-        public List<Track> ConnectedTracks
+        public List<Track> AllConnectedTracks
         {
             get
             {
-                return this.connectedTracks;
+                List<Track> list = new List<Track>();
+                foreach(var c in GenAdj.CellsAdjacentCardinal(this))
+                {
+                    Track t = Find.ThingGrid.ThingAt<Track>(c);
+                    if(t!=null)
+                    {
+                        list.Add(t);
+                    }
+                }
+                return list;
             }
         }
 
-        public bool NextTrackInDirection(Direction dir, out Track track)
+        public virtual List<Track> AvailableConnectedTracks
+        {
+            get
+            {
+                return AllConnectedTracks.Where(t => t.CanBeTravelledTo).ToList();
+            }
+        }
+
+        public virtual Track NextTrackInDirection(Direction dir)
         {
             IntVec3 pos = Position.AdjacentInDirection(dir);
             if (pos.InBounds() && !pos.InNoBuildEdgeArea())
             {
-                foreach (var t in connectedTracks)
+                foreach (var t in AvailableConnectedTracks)
                 {
                     if (t.Position == pos)
                     {
-                        track = t;
-                        return true;
+                        return t;
                     }
                 }
             }
-            track = null;
-            return false;
+            return null;
         }
 
-        public bool SetDirectionRelativeTo(Track track, out Direction dir)
+        public virtual bool Occupied
+        {
+            get
+            {
+                return Find.ThingGrid.ThingAt<Cart>(Position) != null;
+            }
+        }
+
+        public virtual bool Accessible
+        {
+            get
+            {
+                return Position.Walkable();
+            }
+        }
+
+        public virtual bool Obstructed
+        {
+            get
+            {
+                //TODO: Calculate obstructions
+                return false;
+            }
+        }
+
+        public virtual bool CanBeTravelledTo
+        {
+            get
+            {
+                return Accessible && !Occupied;
+            }
+        }
+
+        public Direction DirectionTo(Track track)
         {
             if (track.Position.AdjacentToCardinal(this.Position))
             {
-                if ((track.Position + IntVec3.North) == Position)
+                if ((Position + IntVec3.North) == track.Position)
                 {
-                    dir = Direction.Down;
-                    return true;
+                    return Direction.Up;
                 }
-                else if ((track.Position + IntVec3.South) == Position)
+                else if ((Position + IntVec3.South) == track.Position)
                 {
-                    dir = Direction.Up;
-                    return true;
+                    return Direction.Down;
                 }
-                else if ((track.Position + IntVec3.East) == Position)
+                else if ((Position + IntVec3.East) == track.Position)
                 {
-                    dir = Direction.Left;
-                    return true;
+                    return Direction.Right;
                 }
-                else if ((track.Position + IntVec3.West) == Position)
+                else if ((Position + IntVec3.West) == track.Position)
                 {
-                    dir = Direction.Right;
-                    return true;
+                    return Direction.Left;
                 }
-                dir = Direction.Any;
-                return false;
+                return Direction.Invalid;
             }
-            dir = Direction.Any;
-            return false;
+            return Direction.Invalid;
         }
 
-        public bool NextTrack(Direction preferredDir, out Track result, Track previousTrack = null)
+        public virtual Track NextTrack(Direction preferredDir, Track previousTrack = null)
         {
-            Track t;
-            if (preferredDir != Direction.Any)
+            if (preferredDir != Direction.Any && preferredDir!=Direction.Invalid)
             {
-                if (NextTrackInDirection(preferredDir, out t))
-                {
-                    result = t;
-                    return true;
-                }
-                result = NextTrackRandom(previousTrack);
-                return result != null;
+                Track t = NextTrackInDirection(preferredDir);
+                if (t == null)
+                    t = NextTrackRandom(previousTrack);
+                return t;
             }
             else
             {
-                result = NextTrackRandom(previousTrack);
-                return result != null;
+                return NextTrackRandom(previousTrack);
             }
         }
 
-        public bool NextTrack(out Track result, Track previousTrack = null)
+        public virtual Track NextTrack(Track previousTrack = null)
         {
-            return NextTrack(Direction.Any, out result, previousTrack);
+            return NextTrack(Direction.Any, previousTrack);
         }
 
-        public Track NextTrackRandom(Track previousTrack = null)
+        public virtual Track NextTrackRandom(Track previousTrack = null)
         {
-            if (connectedTracks.Count > 0)
+            if (HasValidPath)
             {
                 List<Track> list;
-                if(previousTrack!=null&&connectedTracks.Count>1)
+                if (previousTrack != null && AvailableConnectedTracks.Count > 1)
                 {
-                    list = connectedTracks.Where(t => t != previousTrack).ToList();
+                    list = AvailableConnectedTracks.Where(t => t != previousTrack).ToList();
                 }
                 else
                 {
-                    list = connectedTracks;
+                    list = AvailableConnectedTracks;
                 }
-                return list.RandomElement();
+                if (list.Count > 0)
+                    return list.RandomElement();
+                else
+                    return null;
             }
             return null;
         }
 
         public virtual bool ShouldStopCart
         {
-            get 
-            { 
+            get
+            {
                 return false;
             }
         }
 
-        public bool HasTrackLeft
+        public virtual bool HasTrackLeft
         {
             get
             {
-                Track t;
-                return NextTrackInDirection(Direction.Left, out t);
+                return NextTrackInDirection(Direction.Left)!=null;
             }
         }
 
-        public bool HasTrackRight
+        public virtual bool HasTrackRight
         {
             get
             {
-                Track t;
-                return NextTrackInDirection(Direction.Right, out t);
+                return NextTrackInDirection(Direction.Right)!=null;
             }
         }
 
-        public bool HasTrackUp
+        public virtual bool HasTrackUp
         {
             get
             {
-                Track t;
-                return NextTrackInDirection(Direction.Up, out t);
+                return NextTrackInDirection(Direction.Up) != null;
             }
         }
 
-        public bool HasTrackDown
+        public virtual bool HasTrackDown
         {
             get
             {
-                Track t;
-                return NextTrackInDirection(Direction.Down, out t);
+                return NextTrackInDirection(Direction.Down)!=null;
             }
         }
 
-        public bool HasValidPath
+        public virtual bool HasValidPath
         {
             get
             {
-                return this.connectedTracks.Count >= 0;
+                return this.AvailableConnectedTracks.Count >= 0;
             }
         }
 
         public bool IsAdjacentTo(Track track)
         {
-            return this.connectedTracks.Contains(track);
-        }
-
-        public void ReloadConnected(bool spawnSetup = false)
-        {
-            connectedTracks = new List<Track>();
-            foreach (var cell in GenAdj.CellsAdjacentCardinal(this))
-            {
-                foreach (var thing in Find.ThingGrid.ThingsAt(cell))
-                {
-                    if (thing is Track && !(thing.Destroyed || !thing.SpawnedInWorld) && thing != this)
-                    {
-                        Track t = (Track)thing;
-                        connectedTracks.Add(t);
-                        if (spawnSetup)
-                        {
-                            t.ReloadConnected();
-                        }
-                    }
-                }
-            }
-        }
-
-        public override void SpawnSetup()
-        {
-            //this.renderer = new Track_Renderer(this);
-            base.SpawnSetup();
-            ReloadConnected(true);
-        }
-
-        public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
-        {
-            base.Destroy(mode);
-            foreach (var track in connectedTracks)
-            {
-                track.ReloadConnected();
-            }
+            return this.AllConnectedTracks.Contains(track);
         }
     }
 }

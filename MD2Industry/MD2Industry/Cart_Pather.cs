@@ -15,6 +15,7 @@ namespace MD2
         private int ticksUntilMove = 0;
         private int totalMoveDuration = 1;
         protected bool moving = false;
+        protected bool stopped = false;
 
         public Cart_Pather(Cart cart)
         {
@@ -42,6 +43,14 @@ namespace MD2
             get
             {
                 return this.direction;
+            }
+        }
+
+        public bool Stopped
+        {
+            get
+            {
+                return this.stopped;
             }
         }
 
@@ -91,13 +100,16 @@ namespace MD2
                 if (!(destination.Position.InBounds()))
                     flag = false;
 
+                if (!destination.CanBeTravelledTo)
+                    flag = false;
+
                 return flag;
             }
         }
 
         public virtual void Tick()
         {
-            if (CurTrack == null)
+            if (CurTrack == null || Stopped)
             {
                 return;
             }
@@ -109,7 +121,26 @@ namespace MD2
             {
                 MovementTick();
             }
+        }
 
+        public virtual void ToggleStopped()
+        {
+            if (stopped)
+                stopped = false;
+            else
+            {
+                stopped = true;
+                StopDead();
+            }
+        }
+
+        public virtual void StopDead()
+        {
+            moving = false;
+            ticksUntilMove = 1;
+            totalMoveDuration = 1;
+            destination = null;
+            previousTrack = null;
         }
 
         private void MoveTo(Track track)
@@ -122,14 +153,21 @@ namespace MD2
 
         private void MovementTick()
         {
-            if(TicksUntilMove>0)
+            if (DestinationIsValid)
             {
-                TicksUntilMove--;
-                return;
+                if (TicksUntilMove > 0)
+                {
+                    TicksUntilMove--;
+                    return;
+                }
+                if (Moving)
+                {
+                    MoveTo(destination);
+                }
             }
-            if(Moving)
+            else
             {
-                MoveTo(destination);
+                StopDead();
             }
         }
 
@@ -137,17 +175,24 @@ namespace MD2
         {
             if (CurTrack.HasValidPath && !CurTrack.ShouldStopCart)
             {
-                SetupNewMove();
-                CurTrack.NextTrack(direction, out destination, previousTrack);
-                CurTrack.SetDirectionRelativeTo(destination, out direction);
-                moving = true;
+                destination = CurTrack.NextTrack(direction, previousTrack);
+                if (destination != null && destination.CanBeTravelledTo)
+                {
+                    SetupNewMove();
+                    previousTrack = CurTrack;
+                    direction = CurTrack.DirectionTo(destination);
+                    if (Direction != Direction.Any && Direction != Direction.Invalid)
+                    {
+                        moving = true;
+                    }
+                }
             }
         }
 
         private void SetupNewMove()
         {
             int ticks = cart.TicksPerMove();
-            if(ticks>450)
+            if (ticks > 450)
             {
                 ticks = 450;
             }
@@ -157,7 +202,7 @@ namespace MD2
 
         public void ExposeData()
         {
-            Scribe_Values.LookValue(ref moving, "moving");
+            Scribe_Values.LookValue(ref this.stopped, "stoppped", false);
             Scribe_Values.LookValue(ref this.direction, "direction", Direction.Any);
             Scribe_References.LookReference(ref this.previousTrack, "previousTrack");
         }

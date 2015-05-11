@@ -17,6 +17,10 @@ namespace MD2
         public Cart_DrawPosTracker(Cart cart)
         {
             this.cart = cart;
+            if (cart.SpawnedInWorld && !cart.Destroyed)
+            {
+                springPos = cart.Position.ToVector3Shifted();
+            }
         }
 
         public Vector3 TweenedPos

@@ -31,6 +31,31 @@ namespace MD2
             }
         }
 
+        public override IEnumerable<Gizmo> GetGizmos()
+        {
+            foreach(var g in base.GetGizmos())
+            {
+                yield return g;
+            }
+
+            Command_Toggle com = new Command_Toggle();
+            if(pather.Stopped)
+            {
+                com.defaultLabel="Continue";
+                com.defaultDesc = "Click to continue the cart moving";
+            }
+            else
+            {
+                com.defaultLabel = "Stop";
+                com.defaultDesc = "Click to stop the cart";
+            }
+            com.groupKey = 13008961;
+            //com.icon=
+            com.isActive = () => { return pather.Stopped; };
+            com.toggleAction = () => { pather.ToggleStopped(); };
+            yield return com;
+        }
+
         public override void SpawnSetup()
         {
             base.SpawnSetup();

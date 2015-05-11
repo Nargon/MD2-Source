@@ -67,7 +67,9 @@
     <Compile Include="PlacementRestrictor_OnFissure.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Track.cs" />
-    <Compile Include="TrackDef.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Things to do.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -11,6 +11,7 @@ namespace MD2
         Down,
         Left,
         Right,
-        Any
+        Any,
+        Invalid
     }
 }
