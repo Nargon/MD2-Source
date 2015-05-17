@@ -15,9 +15,6 @@ namespace MD2
         public Graphic bodyGraphic;
         public Graphic headGraphic;
         private float totalCharge = 1000f;
-        private bool initialised = false;
-        private int ticksToInit = 5;
-        public string backstoryKey;
         public float maxEnergy = 1000;
         public float EnergyUseRate = 150f;
         public bool ChargingNow = false;
@@ -26,9 +23,7 @@ namespace MD2
 
         public override void SpawnSetup()
         {
-            DroidBS.AddDroidBs(backstoryKey);
             base.SpawnSetup();
-            backstoryKey = ((DroidKindDef)this.kindDef).backstoryName;
             if (((DroidKindDef)this.kindDef).maxEnergy > 0)
                 maxEnergy = ((DroidKindDef)this.kindDef).maxEnergy;
             else
@@ -40,21 +35,6 @@ namespace MD2
 
         public override void Tick()
         {
-            if (!initialised)
-            {
-                ticksToInit--;
-                if (ticksToInit <= 0)
-                {
-                    if (!story.childhood.uniqueSaveKey.Contains("Droid"))
-                    {
-                        story.childhood = DroidBackstories.GetBackstoryFor(backstoryKey);
-                        story.adulthood = DroidBackstories.GetBackstoryFor(backstoryKey);
-
-                    }
-                    DroidBS.RemoveDroidBs(backstoryKey);
-                    initialised = true;
-                }
-            }
             RefillNeeds();
             CureDiseases();
             HealDamages();
@@ -95,8 +75,6 @@ namespace MD2
 
         public override void ExposeData()
         {
-            Scribe_Values.LookValue<string>(ref this.backstoryKey, "bs");
-            DroidBS.AddDroidBs(backstoryKey);
             base.ExposeData();
             Scribe_Values.LookValue<bool>(ref this.ChargingNow, "chargingNow");
             Scribe_Values.LookValue<float>(ref this.totalCharge, "TotalCharge");

@@ -19,7 +19,7 @@ namespace MD2
         public bool started = false;
         public bool running = false;
         public bool initialised = false;
-        private byte count = 0;
+        private int count = 0;
         CompPowerTrader powerTrader;
         private static Texture2D beginIcon;
         private static Texture2D pauseIcon;
@@ -94,11 +94,10 @@ namespace MD2
             Scribe_Values.LookValue<int>(ref this.tickAmountToGen, "tickAmountToGen");
             Scribe_Values.LookValue<int>(ref this.ticksRemaining, "ticksRemaining");
             Scribe_Values.LookValue<bool>(ref this.started, "started");
-            Scribe_Values.LookValue<CompPowerTrader>(ref this.powerTrader, "powerTrader");
             Scribe_Values.LookValue<FissureSize>(ref this.fissureSize, "fissureSize");
             Scribe_Values.LookValue<bool>(ref this.initialised, "initialised");
             Scribe_Values.LookValue<bool>(ref this.running, "running");
-            Scribe_Values.LookValue<byte>(ref this.count, "count");
+            Scribe_Values.LookValue(ref this.count, "count");
         }
 
         //Fissure Generator Commands

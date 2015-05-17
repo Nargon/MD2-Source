@@ -4,6 +4,7 @@ using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.AI;
+using Backstories;
 
 namespace MD2
 {
@@ -35,7 +36,6 @@ namespace MD2
             droid.apparel = new Pawn_ApparelTracker(droid);
             droid.ownership = new Pawn_Ownership(droid);
             droid.skills = new Pawn_SkillTracker(droid);
-            //droid.talker = new Pawn_TalkTracker(droid);
             droid.story = new Pawn_StoryTracker(droid);
             droid.workSettings = new Pawn_WorkSettings(droid);
             droid.guest = new Pawn_GuestTracker(droid);
@@ -55,16 +55,19 @@ namespace MD2
             }
             droid.ageTracker.SetChronologicalBirthDate(GenDate.CurrentYear, GenDate.DayOfMonth);
 
-            //Log.Message("5");
             droid.story.skinColor = PawnSkinColors.PaleWhiteSkin;
             droid.story.crownType = CrownType.Narrow;
             droid.story.headGraphicPath = GraphicDatabaseHeadRecords.GetHeadRandom(droid.gender, droid.story.skinColor, droid.story.crownType).GraphicPath;
             droid.story.hairColor = PawnHairColors.RandomHairColor(droid.story.skinColor, droid.ageTracker.AgeBiologicalYears);
-            droid.backstoryKey = kindDef.backstoryName;
-            droid.story.childhood = DroidBackstories.GetBackstoryFor(kindDef.backstoryName);
-            droid.story.adulthood = DroidBackstories.GetBackstoryFor(kindDef.backstoryName);
+            droid.story.childhood = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor());
+            droid.story.adulthood = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor());
             droid.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", true);
-            PawnName name = DroidBS.DroidName(kindDef.label);
+            PawnName name = new PawnName()
+            {
+                first = "Droid",
+                last = "Droid",
+                nick = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor()).titleShort
+            };
             droid.story.name = name;
 
             foreach (SkillRecord sk in droid.skills.skills)
@@ -74,8 +77,6 @@ namespace MD2
             }
             droid.workSettings.InitialSetupFromSkills();
             PawnInventoryGenerator.GenerateInventoryFor(droid);
-            //PawnInventoryGenerator.GiveAppropriateKeysTo(droid);
-            //droid.AdAddAndRemoveComponentsAsAppropriate();
             return droid;
         }
 
@@ -87,9 +88,7 @@ namespace MD2
 
         public static void SpawnDroid(DroidKindDef kindDef, IntVec3 pos)
         {
-            DroidBS.AddBs(DroidBackstories.GetBackstoryFor(kindDef.backstoryName));
             GenSpawn.Spawn(DroidGenerator.GenerateDroid(kindDef), pos);
-            DroidBS.RemoveBs(DroidBackstories.GetBackstoryFor(kindDef.backstoryName));
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using RimWorld;
 using Verse;
+using Backstories;
 
 
 namespace MD2
@@ -11,7 +12,7 @@ namespace MD2
     public class DroidKindDef : PawnKindDef
     {
         public List<WorkTypeDef> allowedWorkTypeDefs;
-        public string backstoryName;
+        public BackstoryDef backstoryDef;
         public string headGraphicPath;
         public float maxEnergy;
         public SettingsDef Settings;

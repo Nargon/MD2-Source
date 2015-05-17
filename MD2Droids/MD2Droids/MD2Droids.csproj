@@ -35,6 +35,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Backstories!">
+      <HintPath>..\..\..\Backstories!\Backstories!\bin\Debug\Backstories!.dll</HintPath>
+    </Reference>
     <Reference Include="MD2Base">
       <HintPath>..\..\MD2Base\MD2Base\bin\Debug\MD2Base.dll</HintPath>
     </Reference>
@@ -53,8 +56,6 @@
     <Compile Include="Crematorius.cs" />
     <Compile Include="Droid.cs" />
     <Compile Include="DroidAssembly.cs" />
-    <Compile Include="DroidBackstories.cs" />
-    <Compile Include="DroidBS.cs" />
     <Compile Include="DroidChargeJob.cs" />
     <Compile Include="DroidChargePad.cs" />
     <Compile Include="DroidChargerComp.cs" />

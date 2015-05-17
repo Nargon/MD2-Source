@@ -10,3 +10,5 @@ C:\Users\ACER\Desktop\MD2C#\MD2Droids\MD2Droids\obj\Debug\MD2Droids.dll
 C:\Users\ACER\Desktop\MD2C#\MD2Droids\MD2Droids\obj\Debug\MD2Droids.pdb
 C:\Users\ACER\Desktop\MD2C#\MD2Droids\MD2Droids\bin\Debug\Assembly-CSharp.dll
 C:\Users\ACER\Desktop\MD2C#\MD2Droids\MD2Droids\bin\Debug\UnityEngine.dll
+C:\Users\ACER\Desktop\MD2C#\MD2Droids\MD2Droids\bin\Debug\Backstories!.dll
+C:\Users\ACER\Desktop\MD2C#\MD2Droids\MD2Droids\bin\Debug\Backstories!.pdb
