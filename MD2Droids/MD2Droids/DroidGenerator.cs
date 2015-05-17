@@ -72,6 +72,7 @@ namespace MD2
                 sk.level = (droid.Config.skillLevel > 20 && !(droid.Config.skillLevel < 0)) ? 20 : droid.Config.skillLevel;
                 sk.passion = droid.Config.passion;
             }
+            droid.workSettings.InitialSetupFromSkills();
             PawnInventoryGenerator.GenerateInventoryFor(droid);
             //PawnInventoryGenerator.GiveAppropriateKeysTo(droid);
             //droid.AdAddAndRemoveComponentsAsAppropriate();

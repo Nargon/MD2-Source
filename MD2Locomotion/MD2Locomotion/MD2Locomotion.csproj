@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{95EE9008-9624-4AF6-8FD2-76B24A5A6086}</ProjectGuid>
+    <ProjectGuid>{972C69B0-5C8C-4294-964B-2E00C27096B9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MD2</RootNamespace>
-    <AssemblyName>MD2Industry</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AssemblyName>MD2Locomotion</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,8 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.9.5532.29361, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Assembly-CSharp">
       <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="MD2Base">
@@ -42,26 +40,32 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine">
       <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClayCollector.cs" />
-    <Compile Include="Extractor.cs" />
-    <Compile Include="FissureClass.cs" />
-    <Compile Include="FissureGenerator.cs" />
-    <Compile Include="FissureSize.cs" />
-    <Compile Include="MinerResourceDef.cs" />
-    <Compile Include="PlacementRestrictor_OnFissure.cs" />
+    <Compile Include="Cart.cs" />
+    <Compile Include="CartDef.cs" />
+    <Compile Include="CartGenerator.cs" />
+    <Compile Include="Cart_DrawerTracker.cs" />
+    <Compile Include="Cart_DrawPosTracker.cs" />
+    <Compile Include="Cart_GraphicSet.cs" />
+    <Compile Include="Cart_Pather.cs" />
+    <Compile Include="Cart_Renderer.cs" />
+    <Compile Include="ITab_Cart_Control.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Track.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Things to do.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld785Win\Mods\MD2Industry\Assemblies"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld785Win\Mods\MD2Locomotion\Assemblies"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

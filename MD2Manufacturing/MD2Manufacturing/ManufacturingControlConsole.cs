@@ -27,6 +27,18 @@ namespace MD2
             base.Tick();
         }
 
+        public void OpenManagerUI()
+        {
+            if(Power!=null&&Power.PowerOn)
+            {
+                Find.LayerStack.Add(new Page_ManufacturingPlantMainUI());
+            }
+            else
+            {
+                Messages.Message("Building must be powered!", MessageSound.Reject);
+            }
+        }
+
         public override IEnumerable<FloatMenuOption> FloatMenuOptions(Pawn myPawn)
         {
             foreach(var m in base.FloatMenuOptions(myPawn))
@@ -34,10 +46,7 @@ namespace MD2
                 yield return m;
             }
             FloatMenuOption option = new FloatMenuOption();
-            option.action = () =>
-            {
-                Find.LayerStack.Add(new Page_ManufacturingPlantMainUI());
-            };
+            option.action = () => OpenManagerUI();
             option.label = "Open manager";
             option.priority = MenuOptionPriority.High;
             option.autoTakeable = true;
@@ -53,10 +62,7 @@ namespace MD2
                 }
             }
             Command_Action com = new Command_Action();
-            com.action = () =>
-                {
-                    Find.LayerStack.Add(new Page_ManufacturingPlantMainUI());
-                };
+            com.action = () => OpenManagerUI();
             com.defaultDesc = "Opens the manufacturing manager user interface";
             com.defaultLabel = "Open manufacturing manager";
             com.icon = Manufacturing_Icon;
