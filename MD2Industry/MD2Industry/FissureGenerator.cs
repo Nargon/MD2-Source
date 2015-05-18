@@ -179,7 +179,13 @@ namespace MD2
             }
             else
             {
-                str.AppendLine("Progress: " + (((float)this.ticksRemaining / (float)this.tickAmountToGen) * 100f).ToString("0.0") + "%");
+                string s;
+                if (ticksRemaining > 0)
+                    s = (((float)this.ticksRemaining / (float)this.tickAmountToGen) * 100f).ToString("0.0");
+                else
+                    s = "0.0";
+
+                str.AppendLine("Progress: " + s + "%");
             }
             return str.ToString();
         }
