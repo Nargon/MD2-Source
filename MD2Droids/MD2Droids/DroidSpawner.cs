@@ -12,7 +12,8 @@ namespace MD2
         public override void SpawnSetup()
         {
             base.SpawnSetup();
-            DroidGenerator.SpawnDroid(DroidKinds.GetNamed(this.Label), this.Position);
+            DroidKindDef def = DefDatabase<PawnKindDef>.GetNamed(this.def.label) as DroidKindDef;
+            DroidGenerator.SpawnDroid(def, this.Position);
             this.Destroy();
         }
     }

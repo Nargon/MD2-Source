@@ -66,9 +66,9 @@
     <Compile Include="DroidGenerator.cs" />
     <Compile Include="DroidJobDefs.cs" />
     <Compile Include="DroidKindDef.cs" />
-    <Compile Include="DroidKinds.cs" />
     <Compile Include="DroidSpawner.cs" />
     <Compile Include="DroidThingDef.cs" />
+    <Compile Include="FactionExt.cs" />
     <Compile Include="InternalCharge.cs" />
     <Compile Include="JobGiver_DroidCharge.cs" />
     <Compile Include="JobGiver_ForDroids.cs" />

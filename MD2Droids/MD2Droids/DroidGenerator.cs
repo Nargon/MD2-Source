@@ -62,6 +62,7 @@ namespace MD2
             droid.story.childhood = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor());
             droid.story.adulthood = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor());
             droid.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", true);
+            droid.drawer.renderer.graphics.hairGraphic = GraphicDatabase.Get<Graphic_Multi>(droid.story.hairDef.graphicPath, ShaderDatabase.Cutout, IntVec2.One, droid.story.hairColor);
             PawnName name = new PawnName()
             {
                 first = "Droid",

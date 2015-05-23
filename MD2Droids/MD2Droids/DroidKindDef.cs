@@ -16,5 +16,7 @@ namespace MD2
         public string headGraphicPath;
         public float maxEnergy;
         public SettingsDef Settings;
+        public bool explodeOnDeath = true;
+        public float explosionRadius = 0.1f;
     }
 }

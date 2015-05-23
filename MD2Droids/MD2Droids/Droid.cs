@@ -23,13 +23,15 @@ namespace MD2
 
         public override void SpawnSetup()
         {
+            this.drawer.renderer.graphics.hairGraphic = GraphicDatabase.Get<Graphic_Multi>(this.story.hairDef.graphicPath, ShaderDatabase.Cutout, IntVec2.One, this.story.hairColor);
             base.SpawnSetup();
             if (((DroidKindDef)this.kindDef).maxEnergy > 0)
                 maxEnergy = ((DroidKindDef)this.kindDef).maxEnergy;
             else
                 Log.Error("Max energy for " + this.ToString() + " was zero or below");
-            this.bodyGraphic = GraphicDatabase.Get<Graphic_Multi>(((DroidKindDef)this.kindDef).standardBodyGraphicPath, ShaderDatabase.Cutout, IntVec2.One, Color.white);
-            this.headGraphic = GraphicDatabase.Get<Graphic_Multi>(((DroidKindDef)this.kindDef).headGraphicPath, ShaderDatabase.Cutout,IntVec2.One,Color.white);
+            this.bodyGraphic = GraphicDatabase.Get<Graphic_Multi>(KindDef.standardBodyGraphicPath, ShaderDatabase.Cutout, IntVec2.One, Color.white);
+            if (!KindDef.headGraphicPath.NullOrEmpty())
+                this.headGraphic = GraphicDatabase.Get<Graphic_Multi>(KindDef.headGraphicPath, ShaderDatabase.Cutout, IntVec2.One, Color.white);
             DoGraphicChanges();
         }
 
@@ -44,7 +46,7 @@ namespace MD2
             {
                 if (pather.Moving)
                     pather.StopDead();
-                if(jobs.curJob.def!=DroidDeactivatedJob.Def)
+                if (jobs.curJob.def != DroidDeactivatedJob.Def)
                 {
                     jobs.StopAll();
                     jobs.StartJob(new Verse.AI.Job(DroidDeactivatedJob.Def));
@@ -135,7 +137,7 @@ namespace MD2
             com.action = () =>
             {
                 this.active = !this.active;
-                if(!active)
+                if (!active)
                 {
                     jobs.StopAll();
                     jobs.StartJob(new Verse.AI.Job(DroidDeactivatedJob.Def));
@@ -146,20 +148,23 @@ namespace MD2
                 }
             };
             yield return com;
+
+            Command_Action a = new Command_Action();
+            a.action = () =>
+            {
+                Find.LayerStack.Add(new Dialog_Confirm("DroidSelfDestructPrompt".Translate(), delegate
+                    {
+                        this.Destroy(DestroyMode.Kill);
+                    }));
+            };
+            a.activateSound = SoundDefOf.Click;
+            a.defaultDesc = "Click this button to cause the droid to self destruct";
+            a.defaultLabel = "Self Destruct";
+            a.disabled = false;
+            a.groupKey = 313740004;
+            a.icon = this.SDIcon;
+            yield return a;
         }
-        //    /* Command_Action a = new Command_Action();
-        //     a.action = () =>
-        //     {
-        //         this.Destroy(DestroyMode.Kill);
-        //     };
-        //     a.activateSound = SoundDefOf.Click;
-        //     a.defaultDesc = "Click this button to cause the droid to self destruct";
-        //     a.defaultLabel = "Self Destruct";
-        //     a.disabled = false;
-        //     a.groupKey = 313740004;
-        //     a.icon = this.SDIcon;
-        //     yield return a;*/
-        //}
 
         public SettingsDef Settings
         {
@@ -172,7 +177,8 @@ namespace MD2
         public virtual void DoGraphicChanges()
         {
             this.drawer.renderer.graphics.ResolveGraphics();
-            this.drawer.renderer.graphics.headGraphic = this.headGraphic;
+            if (headGraphic != null)
+                this.drawer.renderer.graphics.headGraphic = this.headGraphic;
             this.drawer.renderer.graphics.nakedGraphic = this.bodyGraphic;
             this.story.hairDef = DefDatabase<HairDef>.GetNamed("Shaved", true);
         }
@@ -180,8 +186,8 @@ namespace MD2
         public override void Destroy(DestroyMode mode = DestroyMode.Vanish)
         {
             base.Destroy(mode);
-            if (mode == DestroyMode.Kill)
-                GenExplosion.DoExplosion(this.Position, 1.9f, DamageDefOf.Bomb, this);
+            if (mode == DestroyMode.Kill && this.KindDef.explodeOnDeath)
+                GenExplosion.DoExplosion(this.Position, KindDef.explosionRadius, DamageDefOf.Bomb, this);
 
         }
 
@@ -190,6 +196,14 @@ namespace MD2
             if (TotalCharge < 1f || this.Downed)
             {
                 this.Destroy();
+            }
+        }
+
+        public virtual DroidKindDef KindDef
+        {
+            get
+            {
+                return this.kindDef as DroidKindDef;
             }
         }
 
