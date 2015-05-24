@@ -15,8 +15,10 @@ namespace MD2
         public BackstoryDef backstoryDef;
         public string headGraphicPath;
         public float maxEnergy;
+        public float EnergyUseRate = 200f;
         public SettingsDef Settings;
         public bool explodeOnDeath = true;
         public float explosionRadius = 0.1f;
+        public bool disableOnSolarFlare = false;
     }
 }

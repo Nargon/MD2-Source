@@ -31,7 +31,7 @@ namespace MD2
             if (!droid.Active)
                 return null;
             //Check the charge level
-            if (droid.TotalCharge < droid.maxEnergy * chargeThreshold)
+            if (droid.TotalCharge < droid.MaxEnergy * chargeThreshold)
             {
                 IEnumerable<Thing> chargers;
                 List<Thing> list = new List<Thing>();

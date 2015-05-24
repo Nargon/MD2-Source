@@ -1,0 +1,5 @@
+﻿make a repair station for droids
+repair droids - have injuries that droids can have repaired themselves, missing parts to be done by a repairer
+combat droids will have weapons built into them upon creation - need new building table for making combat droids and upgrading combat droids
+
+idea: have central droid uplink hub - has a bandwidth which limits the amount and type of droids you can have

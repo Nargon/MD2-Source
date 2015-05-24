@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Backstories;
 using RimWorld;
-using UnityEngine;
 using Verse;
 using Verse.AI;
-using Backstories;
 
 namespace MD2
 {
@@ -41,6 +38,7 @@ namespace MD2
             droid.guest = new Pawn_GuestTracker(droid);
             droid.needs = new Pawn_NeedsTracker(droid);
             droid.timetable = new Pawn_TimetableTracker();
+            droid.overlay = new DroidUIOverlay(droid);
             for (int i = 0; i < droid.timetable.times.Count; i++)
             {
                 droid.timetable.SetAssignment(i, TimeAssignment.Work);
@@ -57,7 +55,7 @@ namespace MD2
 
             droid.story.skinColor = PawnSkinColors.PaleWhiteSkin;
             droid.story.crownType = CrownType.Narrow;
-            droid.story.headGraphicPath = GraphicDatabaseHeadRecords.GetHeadRandom(droid.gender, droid.story.skinColor, droid.story.crownType).GraphicPath;
+            droid.story.headGraphicPath = GraphicDatabaseHeadRecords.GetHeadRandom(Gender.Male, droid.story.skinColor, droid.story.crownType).GraphicPath;
             droid.story.hairColor = PawnHairColors.RandomHairColor(droid.story.skinColor, droid.ageTracker.AgeBiologicalYears);
             droid.story.childhood = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor());
             droid.story.adulthood = BackstoryDatabase.GetWithKey(kindDef.backstoryDef.UniqueSaveKeyFor());
@@ -76,7 +74,16 @@ namespace MD2
                 sk.level = (droid.Config.skillLevel > 20 && !(droid.Config.skillLevel < 0)) ? 20 : droid.Config.skillLevel;
                 sk.passion = droid.Config.passion;
             }
+
             droid.workSettings.InitialSetupFromSkills();
+            foreach(var def in DefDatabase<WorkTypeDef>.AllDefs)
+            {
+                if (!droid.KindDef.allowedWorkTypeDefs.Contains(def))
+                {
+                    droid.workSettings.SetPriority(def, 0);
+                    droid.workSettings.Disable(def);
+                }
+            } 
             PawnInventoryGenerator.GenerateInventoryFor(droid);
             return droid;
         }
