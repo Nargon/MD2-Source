@@ -9,7 +9,7 @@ using Verse;
 
 namespace MD2
 {
-    public class DroidAssembly : Building_WorkTable
+    public class Building_DroidAssembly : Building_WorkTable
     {
         List<ResearchRecipeDef> recipeList;
         List<string> recipesAdded = new List<string>();

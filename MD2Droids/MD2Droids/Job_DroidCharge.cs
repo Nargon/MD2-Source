@@ -7,13 +7,13 @@ using Verse.AI;
 
 namespace MD2
 {
-    public class DroidChargeJob : JobDriver
+    public class Job_DroidCharge : JobDriver
     {
 
         protected override IEnumerable<Toil> MakeNewToils()
         {
 
-            DroidChargePad charger = (DroidChargePad)TargetThingA;
+            Building_DroidChargePad charger = (Building_DroidChargePad)TargetThingA;
             Toil goToPad = Toils_Goto.GotoThing(TargetIndex.A, PathMode.OnCell);
             goToPad.AddFailCondition(() => { return !charger.IsAvailable(pawn); });
             yield return goToPad;

@@ -35,12 +35,12 @@ namespace MD2
             {
                 IEnumerable<Thing> chargers;
                 List<Thing> list = new List<Thing>();
-                foreach(var c in Find.ListerBuildings.AllBuildingsColonistOfClass<DroidChargePad>())
+                foreach(var c in Find.ListerBuildings.AllBuildingsColonistOfClass<Building_DroidChargePad>())
                 {
                     list.Add((Thing)c);
                 }
                 chargers = list.AsEnumerable();
-                Predicate<Thing> pred = (Thing thing) => { return ((DroidChargePad)thing).IsAvailable(droid); };
+                Predicate<Thing> pred = (Thing thing) => { return ((Building_DroidChargePad)thing).IsAvailable(droid); };
                 Thing target = GenClosest.ClosestThing_Global_Reachable(pawn.Position, chargers, PathMode.OnCell, TraverseParms.For(pawn), distance, pred);
                 if (target != null)
                 {

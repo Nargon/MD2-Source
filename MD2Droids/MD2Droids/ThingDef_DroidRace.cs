@@ -3,7 +3,7 @@ using Verse;
 
 namespace MD2
 {
-    public class DroidThingDef : ThingDef
+    public class ThingDef_DroidRace : ThingDef
     {
         public string standardHeadGraphicPathMulti;
     }

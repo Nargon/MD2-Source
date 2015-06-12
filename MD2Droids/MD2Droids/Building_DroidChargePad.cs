@@ -7,13 +7,13 @@ using Verse;
 
 namespace MD2
 {
-    class DroidChargePad : Building
+    class Building_DroidChargePad : Building
     {
-        public DroidChargerComp Charger
+        public CompDroidCharger Charger
         {
             get
             {
-                return this.GetComp<DroidChargerComp>();
+                return this.GetComp<CompDroidCharger>();
             }
         }
         public bool IsAvailable(Pawn p)

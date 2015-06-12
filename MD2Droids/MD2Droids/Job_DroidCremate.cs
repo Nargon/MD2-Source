@@ -8,7 +8,7 @@ using Verse.AI;
 
 namespace MD2
 {
-    public class DroidCremateJob : JobDriver
+    public class Job_DroidCremate : JobDriver
     {
         private const TargetIndex CorpseIndex = TargetIndex.A;
 
@@ -17,6 +17,7 @@ namespace MD2
             //Set what will cause the job to fail:
             this.FailOnDestroyedOrForbidden(CorpseIndex);
             this.FailOnBurningImmobile(CorpseIndex);
+            this.FailOn(() => !(pawn is Crematorius));
 
             //Reserve the corpse
             yield return Toils_Reserve.Reserve(CorpseIndex);
@@ -39,6 +40,9 @@ namespace MD2
             toil.WithEffect(() => DefDatabase<EffecterDef>.GetNamed("Cremate"), CorpseIndex);
             toil.WithSustainer(() => DefDatabase<SoundDef>.GetNamed("Recipe_Cremate"));
             toil.AddFinishAction(() => TargetA.Thing.Destroy());
+            toil.FailOnBurningImmobile(CorpseIndex);
+            toil.FailOnDestroyedOrForbidden(CorpseIndex);
+            toil.AddEndCondition(() => this.ticksLeftThisToil <= 0 ? JobCondition.Succeeded : JobCondition.Ongoing);
             yield return toil;
         }
     }

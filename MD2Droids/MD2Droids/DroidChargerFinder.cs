@@ -35,7 +35,7 @@ namespace MD2
 							if (current.SpawnedInWorld)
 							{
                                 
-                                if(((DroidChargePad)current).IsAvailable(pawn))
+                                if(((Building_DroidChargePad)current).IsAvailable(pawn))
                                 {
 									result = current;
 									num6 = lengthHorizontalSquared;

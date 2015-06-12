@@ -27,10 +27,7 @@ namespace MD2
 
         public void Reinit()
         {
-            OTab_Droid_Work.VisibleWorkTypeDefsInPriorityOrder = (
-                from t in WorkTypeDefsUtility.WorkTypeDefsInPriorityOrder
-                where t.visible && !(t == DefDatabase<WorkTypeDef>.GetNamed("Patient", false))
-                select t).ToList();
+            OTab_Droid_Work.VisibleWorkTypeDefsInPriorityOrder = DroidWorkTypeDefs.DroidWorkTypeDefsInPriorityOrder.ToList();
         }
 
         public override void OTabOnGUI(Rect fillRect)

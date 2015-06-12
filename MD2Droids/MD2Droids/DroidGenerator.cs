@@ -71,19 +71,24 @@ namespace MD2
 
             foreach (SkillRecord sk in droid.skills.skills)
             {
-                sk.level = (droid.Config.skillLevel > 20 && !(droid.Config.skillLevel < 0)) ? 20 : droid.Config.skillLevel;
+                sk.level = (droid.Config.skillLevel > 20 || (droid.Config.skillLevel < 0)) ? 20 : droid.Config.skillLevel;
                 sk.passion = droid.Config.passion;
             }
 
             droid.workSettings.InitialSetupFromSkills();
-            foreach(var def in DefDatabase<WorkTypeDef>.AllDefs)
+            foreach (var def in DefDatabase<WorkTypeDef>.AllDefs)
             {
                 if (!droid.KindDef.allowedWorkTypeDefs.Contains(def))
                 {
                     droid.workSettings.SetPriority(def, 0);
                     droid.workSettings.Disable(def);
                 }
-            } 
+
+                if (def == DefDatabase<WorkTypeDef>.GetNamed("MD2Maintenance", false))
+                {
+                    droid.workSettings.SetPriority(def, 4);
+                }
+            }
             PawnInventoryGenerator.GenerateInventoryFor(droid);
             return droid;
         }

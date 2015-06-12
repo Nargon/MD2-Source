@@ -14,7 +14,7 @@ namespace MD2
             get
             {
                 return (from t in ListerDroids.AllDroids
-                        where t.TotalCharge < t.MaxEnergy *0.15f
+                        where t.TotalCharge < t.MaxEnergy *0.1f
                         select t).AsEnumerable();
             }
         }

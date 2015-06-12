@@ -1,13 +1,14 @@
 ﻿using RimWorld;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using UnityEngine;
 using Verse;
 
 
 namespace MD2
 {
-    public class Droid : Pawn, InternalCharge
+    public class Droid : Pawn, InternalCharge, RepairableDroid
     {
         public DroidUIOverlay overlay;
 
@@ -20,6 +21,9 @@ namespace MD2
         public bool ChargingNow = false;
         public bool RequiresPower = true;
         private bool active = true;
+
+        private bool beingRepaired = false;
+        private Building_DroidRepairStation repairStation;
 
         public override void SpawnSetup()
         {
@@ -43,18 +47,34 @@ namespace MD2
         {
             RefillNeeds();
             CureDiseases();
-            HealDamages();
             CheckPowerRemaining();
+            ResetDrafter();
             base.Tick();
-            if (!Active || (KindDef.disableOnSolarFlare && Find.MapConditionManager.ConditionIsActive(MapConditionDefOf.SolarFlare)))
+            if (!Active || BeingRepaired || (KindDef.disableOnSolarFlare && Find.MapConditionManager.ConditionIsActive(MapConditionDefOf.SolarFlare)))
             {
                 Inactive();
             }
             else
             {
-                if (!ChargingNow)
+                if (!ChargingNow && !BeingRepaired)
                 {
                     Deplete(KindDef.EnergyUseRate);
+                }
+            }
+        }
+
+        private void ResetDrafter()
+        {
+            if(this.playerController.Drafted)
+            {
+                if(Find.TickManager.TicksGame%4800==0)
+                {
+                    AutoUndrafter undrafter = (AutoUndrafter)typeof(Drafter).GetField("autoUndrafter", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(this.playerController.drafter);
+                    if(undrafter!=null)
+                    {
+                        typeof(AutoUndrafter).GetField("lastNonWaitingTick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(undrafter, Find.TickManager.TicksGame);
+                        //Log.Message("Reset ticks " + ((int)typeof(AutoUndrafter).GetField("lastNonWaitingTick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(undrafter)).ToString());
+                    }
                 }
             }
         }
@@ -63,10 +83,10 @@ namespace MD2
         {
             if (pather.Moving)
                 pather.StopDead();
-            if (jobs.curJob.def != DroidDeactivatedJob.Def)
+            if (!BeingRepaired && jobs.curJob.def != Job_DroidDeactivated.Def)
             {
                 jobs.StopAll();
-                jobs.StartJob(new Verse.AI.Job(DroidDeactivatedJob.Def));
+                jobs.StartJob(new Verse.AI.Job(Job_DroidDeactivated.Def));
             }
         }
 
@@ -149,7 +169,7 @@ namespace MD2
                 if (!active)
                 {
                     jobs.StopAll();
-                    jobs.StartJob(new Verse.AI.Job(DroidDeactivatedJob.Def));
+                    jobs.StartJob(new Verse.AI.Job(Job_DroidDeactivated.Def));
                 }
                 else
                 {
@@ -214,9 +234,9 @@ namespace MD2
 
         public virtual void CheckPowerRemaining()
         {
-            if (TotalCharge < 1f || this.Downed)
+            if (TotalCharge < 1f || Downed)
             {
-                this.Destroy();
+                this.Destroy(DestroyMode.Kill);
             }
         }
 
@@ -253,22 +273,6 @@ namespace MD2
             get
             {
                 return ((DroidKindDef)this.kindDef).Settings;
-            }
-        }
-
-        private void HealDamages()
-        {
-            if (Find.TickManager.TicksGame % Settings.healDelayTicks == 0)
-            {
-                IEnumerable<Hediff_Injury> treatableInjuries = this.health.hediffSet.GetInjuriesLocalTreatable();
-                foreach (var current in treatableInjuries)
-                {
-                    if (!current.IsTreatedAndHealing())
-                    {
-                        current.DirectHeal(1000000f);
-                        break;
-                    }
-                }
             }
         }
 
@@ -329,6 +333,102 @@ namespace MD2
         public bool DesiresCharge()
         {
             return this.TotalCharge < MaxEnergy;
+        }
+
+        public bool BeingRepaired
+        {
+            get
+            {
+                return beingRepaired;
+            }
+            set
+            {
+                beingRepaired = value;
+            }
+        }
+
+        public Building_DroidRepairStation RepairStation
+        {
+            get
+            {
+                return repairStation;
+            }
+            set
+            {
+                repairStation = value;
+            }
+        }
+
+        public void RepairTick()
+        {
+            if (RepairStation != null)
+            {
+                BodyPartRecord missingPart = null;
+                if (health.hediffSet.GetHediffs<Hediff_MissingPart>().Count() > 0)
+                {
+                    missingPart = health.hediffSet.GetHediffs<Hediff_MissingPart>().First().Part;
+                }
+
+                Hediff_Injury injury = null;
+                if (health.hediffSet.GetInjuriesLocalTreatable().Count() > 0)
+                {
+                    injury = health.hediffSet.GetInjuriesLocalTreatable().RandomElement();
+                }  
+
+                bool hasPartMissing = missingPart != null ? true : false;
+                int repairAmount = RepairStation.Def.repairAmount;
+                bool rpsHasResources = true;
+                if (RepairStation.Def.replacePartsCostsResources)
+                    rpsHasResources = RepairStation.HasEnoughOf(RepairStation.Def.repairThingDef, RepairStation.Def.repairCostAmount);
+
+                if (hasPartMissing && rpsHasResources)
+                {
+                    //Log.Message("Part is missing!");
+                    if (Rand.Value > 0.5f && injury != null)
+                    {
+                        injury.DirectHeal(repairAmount);
+                    }
+                    else if (missingPart != null)
+                    {
+                        if (RepairStation.TakeSomeOf(RepairStation.Def.repairThingDef, RepairStation.Def.repairCostAmount))
+                        {
+                            //Log.Message("Took the resources and restored the part");
+                            health.hediffSet.RestorePart(missingPart);
+                        }
+                    }
+                }
+                else if (injury != null)
+                {
+                    health.hediffSet.GetInjuriesLocalTreatable().RandomElement().DirectHeal(repairAmount);
+                }
+            }
+        }
+
+        public bool ShouldGetRepairs
+        {
+            get
+            {
+                return health.hediffSet.HasTreatableInjury() ||
+                    health.hediffSet.HasFreshMissingPartsCommonAncestor() ||
+                    health.hediffSet.GetHediffs<Hediff_MissingPart>().Count() > 0 &&
+                    ((this.Faction == Faction.OfColony && !this.IsPrisonerOfColony) || (this.guest != null && this.guest.doctorsCare));
+            }
+        }
+
+        public Pawn Pawn
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        public int RepairsNeededCount
+        {
+            get
+            {
+                return health.hediffSet.GetHediffs<Hediff_Injury>().Count() + health.hediffSet.GetHediffs<Hediff_MissingPart>().Count();
+            }
         }
     }
 }

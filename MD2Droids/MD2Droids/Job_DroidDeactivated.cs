@@ -6,7 +6,7 @@ using Verse.AI;
 
 namespace MD2
 {
-    public class DroidDeactivatedJob : JobDriver
+    public class Job_DroidDeactivated : JobDriver
     {
         public static Verse.JobDef Def
         {

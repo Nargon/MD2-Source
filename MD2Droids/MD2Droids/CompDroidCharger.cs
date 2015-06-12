@@ -7,9 +7,10 @@ using Verse;
 
 namespace MD2
 {
-    class DroidChargerComp : ThingComp
+    class CompDroidCharger : ThingComp
     {
         private Pawn pawn;
+
         public bool CanUse(Pawn p)
         {
             return pawn == null || pawn == p;
