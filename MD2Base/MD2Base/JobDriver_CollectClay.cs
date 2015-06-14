@@ -17,7 +17,7 @@ namespace MD2
 
             yield return Toils_Reserve.Reserve(CellInd);
 
-            yield return Toils_Goto.GotoCell(CellInd, PathMode.Touch);
+            yield return Toils_Goto.GotoCell(CellInd, PathEndMode.Touch);
 
             yield return Toils_General.Wait(400);
 

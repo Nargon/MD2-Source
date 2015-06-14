@@ -9,7 +9,7 @@ namespace MD2
 {
     public class CompRepairStationSupplier : ThingComp
     {
-        private List<Building_DroidRepairStation> repairStations = new List<Building_DroidRepairStation>();
+        private List<Building_RepairStation> repairStations = new List<Building_RepairStation>();
         
         public IEnumerable<Thing> AvailableResources
         {
@@ -32,7 +32,7 @@ namespace MD2
             Notify_SupplierDespawned();
         }
 
-        public void Notify_RepairStationDespawned(Building_DroidRepairStation rps)
+        public void Notify_RepairStationDespawned(Building_RepairStation rps)
         {
             if (repairStations.Contains(rps))
             {
@@ -40,7 +40,7 @@ namespace MD2
             }
         }
 
-        public void Notify_RepairStationSpawned(Building_DroidRepairStation rps)
+        public void Notify_RepairStationSpawned(Building_RepairStation rps)
         {
             if(!repairStations.Contains(rps))
             {
@@ -50,11 +50,11 @@ namespace MD2
 
         private void Notify_SupplierSpawned()
         {
-            if (Find.ListerBuildings.AllBuildingsColonistOfClass<Building_DroidRepairStation>() != null)
+            if (Find.ListerBuildings.AllBuildingsColonistOfClass<Building_RepairStation>() != null)
             {
                 foreach (var c in GenAdj.CellsAdjacentCardinal(this.parent))
                 {
-                    Building_DroidRepairStation rps = Find.ThingGrid.ThingAt<Building_DroidRepairStation>(c);
+                    Building_RepairStation rps = Find.ThingGrid.ThingAt<Building_RepairStation>(c);
                     if(rps!=null)
                     {
                         rps.Notify_SupplierSpawned(this);

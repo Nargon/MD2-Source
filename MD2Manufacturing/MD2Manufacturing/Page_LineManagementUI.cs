@@ -84,7 +84,7 @@ namespace MD2
                     Rect outRect = new Rect(orderStackRect.AtZero());
                     try
                     {
-                        this.scrollPosition = Widgets.BeginScrollView(outRect, this.scrollPosition, viewRect);
+                        Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
                         float currentScrollY = 0f;
 
                         foreach (var current in this.orders)

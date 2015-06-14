@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class ListItem : Saveable
+    public class ListItem : IExposable
     {
         public ListItem(ThingDef thing, int amount)
         {

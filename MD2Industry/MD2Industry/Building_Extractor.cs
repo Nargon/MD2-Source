@@ -8,7 +8,7 @@ using Verse;
 
 namespace MD2
 {
-    public class Extractor : Building
+    public class Building_Extractor : Building
     {
         private static readonly Texture2D chooseIcon = ContentFinder<Texture2D>.Get("UI/Commands/ChooseResourceUI");
         public CompPowerTrader power;
@@ -79,8 +79,7 @@ namespace MD2
             {
                 MoteThrower.ThrowDustPuff(this.TrueCenter(), 0.3f);
             }
-            int tick = availableList[resourceIndex].ticksToProduce;
-            if (tickCount--<=0)
+            if (tickCount-- <= 0)
             {
                 tickCount = availableList[resourceIndex].ticksToProduce;
                 Dig();
@@ -91,7 +90,7 @@ namespace MD2
         {
             if (base.GetGizmos() != null)
             {
-                foreach(var c in base.GetGizmos())
+                foreach (var c in base.GetGizmos())
                 {
                     yield return c;
                 }
@@ -145,23 +144,6 @@ namespace MD2
             str.AppendLine(String.Format("Fissure size: {0}", CurFissureSize.ToString()));
             str.AppendLine(String.Format("Selected resource: {0}", availableList[resourceIndex].label));
             return str.ToString();
-        }
-
-        public IntVec3 SpawnPos
-        {
-            get
-            {
-                int count = 0;
-                while (count < 30)
-                {
-                    IntVec3 pos = this.Position + GenRadial.RadialPattern[count];
-                    if (!pos.Standable() || !pos.InBounds())
-                        count++;
-                    else
-                        return pos;
-                }
-                return this.Position;
-            }
         }
 
         public void Dig()
@@ -243,7 +225,7 @@ namespace MD2
         {
             get
             {
-                FissureClass thing = (FissureClass)Find.ThingGrid.ThingAt(this.Position, ThingDef.Named("mipFissure"));
+                Fissure thing = (Fissure)Find.ThingGrid.ThingAt(this.Position, ThingDef.Named("MD2Fissure"));
                 if (thing != null)
                     return thing.size;
                 else

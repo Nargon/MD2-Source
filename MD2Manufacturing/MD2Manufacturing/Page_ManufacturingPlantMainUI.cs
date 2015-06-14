@@ -57,7 +57,7 @@ namespace MD2
             Rect outRect = new Rect(mainRect.AtZero());
 
             //This function starts the scrolling view, and uses the scrollPosition variable to record where in the scrollview we are looking
-            this.scrollPosition = Widgets.BeginScrollView(outRect, this.scrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
 
             //This float is the current y position in the scrollview, we use this for drawing each entry under each other.
             float currentY = 0f;

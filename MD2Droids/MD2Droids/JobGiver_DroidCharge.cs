@@ -41,7 +41,7 @@ namespace MD2
                 }
                 chargers = list.AsEnumerable();
                 Predicate<Thing> pred = (Thing thing) => { return ((Building_DroidChargePad)thing).IsAvailable(droid); };
-                Thing target = GenClosest.ClosestThing_Global_Reachable(pawn.Position, chargers, PathMode.OnCell, TraverseParms.For(pawn), distance, pred);
+                Thing target = GenClosest.ClosestThing_Global_Reachable(pawn.Position, chargers, PathEndMode.OnCell, TraverseParms.For(pawn), distance, pred);
                 if (target != null)
                 {
                     return new Job(DefDatabase<JobDef>.GetNamed("MD2ChargeDroid"), new TargetInfo(target));

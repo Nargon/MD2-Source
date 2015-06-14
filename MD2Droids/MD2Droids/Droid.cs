@@ -4,11 +4,12 @@ using System.Text;
 using System.Linq;
 using UnityEngine;
 using Verse;
+using Verse.AI;
 
 
 namespace MD2
 {
-    public class Droid : Pawn, InternalCharge, RepairableDroid
+    public class Droid : Pawn, InternalCharge, IRepairable
     {
         public DroidUIOverlay overlay;
 
@@ -20,18 +21,18 @@ namespace MD2
         private float totalCharge = 1000f;
         public bool ChargingNow = false;
         public bool RequiresPower = true;
-        private bool active = true;
+        protected bool active = true;
 
         private bool beingRepaired = false;
-        private Building_DroidRepairStation repairStation;
+        private Building_RepairStation repairStation;
 
         public override void SpawnSetup()
         {
             ListerDroids.RegisterDroid(this);
             base.SpawnSetup();
-            this.bodyGraphic = GraphicDatabase.Get<Graphic_Multi>(KindDef.standardBodyGraphicPath, ShaderDatabase.Cutout, IntVec2.One, Color.white);
+            this.bodyGraphic = GraphicDatabase.Get<Graphic_Multi>(KindDef.standardBodyGraphicPath, ShaderDatabase.Cutout, Vector2.one, Color.white);
             if (!KindDef.headGraphicPath.NullOrEmpty())
-                this.headGraphic = GraphicDatabase.Get<Graphic_Multi>(KindDef.headGraphicPath, ShaderDatabase.Cutout, IntVec2.One, Color.white);
+                this.headGraphic = GraphicDatabase.Get<Graphic_Multi>(KindDef.headGraphicPath, ShaderDatabase.Cutout, Vector2.one, Color.white);
             DoGraphicChanges();
         }
 
@@ -65,12 +66,12 @@ namespace MD2
 
         private void ResetDrafter()
         {
-            if(this.playerController.Drafted)
+            if (this.playerController.Drafted)
             {
-                if(Find.TickManager.TicksGame%4800==0)
+                if (Find.TickManager.TicksGame % 4800 == 0)
                 {
                     AutoUndrafter undrafter = (AutoUndrafter)typeof(Drafter).GetField("autoUndrafter", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(this.playerController.drafter);
-                    if(undrafter!=null)
+                    if (undrafter != null)
                     {
                         typeof(AutoUndrafter).GetField("lastNonWaitingTick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).SetValue(undrafter, Find.TickManager.TicksGame);
                         //Log.Message("Reset ticks " + ((int)typeof(AutoUndrafter).GetField("lastNonWaitingTick", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(undrafter)).ToString());
@@ -83,11 +84,31 @@ namespace MD2
         {
             if (pather.Moving)
                 pather.StopDead();
-            if (!BeingRepaired && jobs.curJob.def != Job_DroidDeactivated.Def)
+            if (!BeingRepaired && jobs.curJob.def != JobDriver_DroidDeactivated.Def)
             {
                 jobs.StopAll();
-                jobs.StartJob(new Verse.AI.Job(Job_DroidDeactivated.Def));
+                jobs.StartJob(new Verse.AI.Job(JobDriver_DroidDeactivated.Def));
             }
+        }
+
+        public bool ToggleActive(bool state)
+        {
+            this.active = state;
+            if (!active)
+            {
+                jobs.StopAll();
+                jobs.StartJob(new Verse.AI.Job(JobDriver_DroidDeactivated.Def));
+            }
+            else
+            {
+                jobs.StopAll();
+            }
+            return active;
+        }
+
+        public bool ToggleActive()
+        {
+            return ToggleActive(!active);
         }
 
         private void RefillNeeds()
@@ -110,6 +131,76 @@ namespace MD2
             Scribe_Values.LookValue<bool>(ref this.ChargingNow, "chargingNow");
             Scribe_Values.LookValue<float>(ref this.totalCharge, "TotalCharge");
             Scribe_Values.LookValue<bool>(ref this.active, "active");
+        }
+
+        public override IEnumerable<FloatMenuOption> GetExtraFloatMenuOptionsFor(IntVec3 sq)
+        {
+            foreach (var thing in sq.GetThingList())
+            {
+                if (this.equipment != null && (thing.def.IsMeleeWeapon || thing.def.IsRangedWeapon))
+                {
+                    yield return new FloatMenuOption("Equip".Translate(thing.Label), delegate
+                    {
+                        CompForbiddable f = thing.TryGetComp<CompForbiddable>();
+                        if (f != null && f.Forbidden)
+                        {
+                            f.Forbidden = false;
+                        }
+                        this.jobs.StartJob(new Job(JobDefOf.Equip, thing), JobCondition.InterruptForced);
+                    });
+                }
+                if (thing is Pawn)
+                {
+                    Pawn p = thing as Pawn;
+                    if (p.RaceProps.intelligence >= Intelligence.Humanlike)
+                    {
+                        if (playerController.Drafted && p.CanBeArrested() && this.CanReserveAndReach(p, PathEndMode.Touch, Danger.Some))
+                        {
+
+                            //Try to arrest
+                            yield return new FloatMenuOption("TryToArrest".Translate(p.LabelCap), delegate
+                            {
+                                Building_Bed bed = Find.ListerBuildings.AllBuildingsColonistOfClass<Building_Bed>().Where((Building_Bed b) => b.ForPrisoners && b.owner == null).FirstOrDefault();
+                                if (bed != null)
+                                {
+                                    Job job = new Job(JobDefOf.Arrest, p, bed);
+                                    job.maxNumToCarry = 1;
+                                    this.jobs.StartJob(job, JobCondition.InterruptForced);
+                                }
+                                else
+                                {
+                                    Messages.Message("DroidArrestNoBedsAvailable".Translate(), MessageSound.RejectInput);
+                                }
+                            });
+                        }
+                        if (p.Downed)
+                        {
+                            if (p.AnythingToStrip())
+                            {
+                                yield return new FloatMenuOption("Strip".Translate(p.LabelCap), delegate
+                                    {
+                                        jobs.StartJob(new Job(JobDefOf.Strip, p), JobCondition.InterruptForced);
+                                    });
+                            }
+                        }
+                    }
+                }
+                if (thing is Corpse)
+                {
+                    Corpse c = thing as Corpse;
+                    if (c.AnythingToStrip())
+                    {
+                        yield return new FloatMenuOption("Strip".Translate(c.LabelCap), delegate
+                        {
+                            jobs.StartJob(new Job(JobDefOf.Strip, c), JobCondition.InterruptForced);
+                        });
+                    }
+                }
+            }
+            foreach (var o in base.GetExtraFloatMenuOptionsFor(sq))
+            {
+                yield return o;
+            }
         }
 
         public override string GetInspectString()
@@ -165,16 +256,7 @@ namespace MD2
             com.hotKey = Keys.DeactivateDroid;
             com.action = () =>
             {
-                this.active = !this.active;
-                if (!active)
-                {
-                    jobs.StopAll();
-                    jobs.StartJob(new Verse.AI.Job(Job_DroidDeactivated.Def));
-                }
-                else
-                {
-                    jobs.StopAll();
-                }
+                this.ToggleActive();
             };
             yield return com;
 
@@ -217,7 +299,7 @@ namespace MD2
             if (headGraphic != null)
             {
                 this.drawer.renderer.graphics.headGraphic = this.headGraphic;
-                this.drawer.renderer.graphics.hairGraphic = GraphicDatabase.Get<Graphic_Multi>(this.story.hairDef.graphicPath, ShaderDatabase.Cutout, IntVec2.One, this.story.hairColor);
+                this.drawer.renderer.graphics.hairGraphic = GraphicDatabase.Get<Graphic_Multi>(this.story.hairDef.texPath, ShaderDatabase.Cutout, Vector2.one, this.story.hairColor);
             }
             this.drawer.renderer.graphics.nakedGraphic = this.bodyGraphic;
         }
@@ -347,7 +429,7 @@ namespace MD2
             }
         }
 
-        public Building_DroidRepairStation RepairStation
+        public Building_RepairStation RepairStation
         {
             get
             {
@@ -373,7 +455,7 @@ namespace MD2
                 if (health.hediffSet.GetInjuriesLocalTreatable().Count() > 0)
                 {
                     injury = health.hediffSet.GetInjuriesLocalTreatable().RandomElement();
-                }  
+                }
 
                 bool hasPartMissing = missingPart != null ? true : false;
                 int repairAmount = RepairStation.Def.repairAmount;
@@ -408,7 +490,7 @@ namespace MD2
         {
             get
             {
-                return health.hediffSet.HasTreatableInjury() ||
+                return health.hediffSet.HasTreatableInjury ||
                     health.hediffSet.HasFreshMissingPartsCommonAncestor() ||
                     health.hediffSet.GetHediffs<Hediff_MissingPart>().Count() > 0 &&
                     ((this.Faction == Faction.OfColony && !this.IsPrisonerOfColony) || (this.guest != null && this.guest.doctorsCare));

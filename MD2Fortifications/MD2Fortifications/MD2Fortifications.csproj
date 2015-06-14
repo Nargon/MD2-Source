@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.10.5588.26555, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=0.10.5590.33516, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\RimWorld834Win\RimWorld834Win_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="MD2Base">
       <HintPath>..\..\MD2Base\MD2Base\bin\Debug\MD2Base.dll</HintPath>
@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\RimWorld834Win\RimWorld834Win_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +58,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld785Win\Mods\MD2Fortifications\Assemblies"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld834Win\Mods\MD2Fortifications\Assemblies"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

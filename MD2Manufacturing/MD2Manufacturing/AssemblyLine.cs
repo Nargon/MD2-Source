@@ -7,7 +7,7 @@ using Verse;
 
 namespace MD2
 {
-    public class AssemblyLine : Saveable
+    public class AssemblyLine : IExposable
     {
         public AssemblyLineProperty Speed;
         public AssemblyLineProperty Efficiency;

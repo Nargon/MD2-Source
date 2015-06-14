@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class ClayCollector : Building
+    public class Building_ClayCollector : Building
     {
         public static readonly ThingDef SoftClayDef = DefDatabase<ThingDef>.GetNamed("MD2SoftClay");
 

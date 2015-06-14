@@ -8,7 +8,7 @@ namespace MD2
 {
     public class PlacementRestricter_NextToCoalPlant : PlaceWorker
     {
-        public override AcceptanceReport AllowsPlacing(EntityDef checkingDef, IntVec3 loc, Rot4 rot)
+        public override AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot)
         {
             ThingDef def = ThingDef.Named("MD2CoalBurner");
             foreach (IntVec3 pos in GenAdj.CellsAdjacentCardinal(loc,Rot4.North,IntVec2.One))

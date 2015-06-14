@@ -9,9 +9,9 @@ namespace MD2
 {
     public class PlacementRestrictor_OnFissure : PlaceWorker
     {
-        public override AcceptanceReport AllowsPlacing(EntityDef checkingDef, IntVec3 loc, Rot4 rot)
+        public override AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot)
         {
-            FissureClass thing = (FissureClass)Find.ThingGrid.ThingAt(loc, ThingDef.Named("mipFissure"));
+            Fissure thing = (Fissure)Find.ThingGrid.ThingAt(loc, ThingDef.Named("MD2Fissure"));
             if (thing != null && thing.Position == loc)
                 return true;
             else

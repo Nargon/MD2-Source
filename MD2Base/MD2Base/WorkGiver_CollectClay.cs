@@ -10,11 +10,11 @@ namespace MD2
 {
     public class WorkGiver_CollectClay : WorkGiver
     {
-        public override PathMode PathMode
+        public override PathEndMode PathEndMode
         {
             get
             {
-                return PathMode.Touch;
+                return PathEndMode.Touch;
             }
         }
 
@@ -24,7 +24,7 @@ namespace MD2
             foreach(var designation in Find.DesignationManager.DesignationsOfDef(DefDatabase<DesignationDef>.GetNamed("MD2CollectClay")))
             {
                 IntVec3 cell = designation.target.Cell;
-                if(cell!=null && cell.InBounds()&&pawn.CanReserveAndReach(designation.target,PathMode.Touch,Danger.Some))
+                if(cell!=null && cell.InBounds()&&pawn.CanReserveAndReach(designation.target,PathEndMode.Touch,Danger.Some))
                 {
                     cells.Add(designation.target.Cell);
                 }
@@ -39,7 +39,7 @@ namespace MD2
 
         public override bool HasJobOnCell(Pawn pawn, IntVec3 c)
         {
-            return pawn.Faction == Faction.OfColony && Find.DesignationManager.DesignationAt(c, DefDatabase<DesignationDef>.GetNamed("MD2CollectClay")) != null && pawn.CanReserveAndReach(c, PathMode.Touch, Danger.Some);
+            return pawn.Faction == Faction.OfColony && Find.DesignationManager.DesignationAt(c, DefDatabase<DesignationDef>.GetNamed("MD2CollectClay")) != null && pawn.CanReserveAndReach(c, PathEndMode.Touch, Danger.Some);
         }
 
         public override Job JobOnCell(Pawn pawn, IntVec3 cell)

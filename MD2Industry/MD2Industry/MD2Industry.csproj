@@ -31,9 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp, Version=0.9.5532.29361, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Assembly-CSharp, Version=0.10.5590.33516, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\..\RimWorld834Win\RimWorld834Win_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="MD2Base">
       <HintPath>..\..\MD2Base\MD2Base\bin\Debug\MD2Base.dll</HintPath>
@@ -46,14 +46,14 @@
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\RimWorld785Win\RimWorld785Win_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\..\RimWorld834Win\RimWorld834Win_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClayCollector.cs" />
-    <Compile Include="Extractor.cs" />
-    <Compile Include="FissureClass.cs" />
-    <Compile Include="FissureGenerator.cs" />
+    <Compile Include="Building_ClayCollector.cs" />
+    <Compile Include="Building_Extractor.cs" />
+    <Compile Include="Fissure.cs" />
+    <Compile Include="Building_FissureGenerator.cs" />
     <Compile Include="FissureSize.cs" />
     <Compile Include="MinerResourceDef.cs" />
     <Compile Include="PlacementRestrictor_OnFissure.cs" />
@@ -61,7 +61,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld785Win\Mods\MD2Industry\Assemblies"</PostBuildEvent>
+    <PostBuildEvent>copy "$(TargetPath)" "C:\Users\ACER\Desktop\RimWorld834Win\Mods\MD2Industry\Assemblies"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

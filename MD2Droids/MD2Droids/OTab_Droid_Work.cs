@@ -109,7 +109,7 @@ namespace MD2
         protected void DrawRows(Rect outRect)
         {
             Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, (float)ListerDroids.AllDroids.Count * 30f);
-            this.scrollPosition = Widgets.BeginScrollView(outRect, this.scrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
             float num = 0f;
             foreach (Droid current in ListerDroids.AllDroids)
             {
@@ -124,6 +124,7 @@ namespace MD2
             }
             Widgets.EndScrollView();
         }
+
         private void PreDrawPawnRow(Rect rect, Pawn p)
         {
             Rect position = new Rect(0f, rect.y, rect.width, 30f);
@@ -162,11 +163,11 @@ namespace MD2
             tooltip.text = "ClickToJumpTo".Translate() + "\n\n" + tooltip.text;
             TooltipHandler.TipRegion(rect2, tooltip);
         }
-        private void PostDrawPawnRow(Rect rect, Pawn p)
+        private void PostDrawPawnRow(Rect rect, Droid p)
         {
-            if (p.Downed)
+            if (!p.Active)
             {
-                GUI.color = new Color(1f, 0f, 0f, 0.5f);
+                GUI.color = new Color(1f, 1f, 0f, 0.5f);
                 Widgets.DrawLineHorizontal(rect.x, rect.center.y, rect.width);
                 GUI.color = Color.white;
             }

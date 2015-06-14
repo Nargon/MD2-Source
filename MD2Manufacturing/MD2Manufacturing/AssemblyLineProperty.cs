@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class AssemblyLineProperty: Saveable
+    public class AssemblyLineProperty: IExposable
     {
         private float value;
         private string label = "";

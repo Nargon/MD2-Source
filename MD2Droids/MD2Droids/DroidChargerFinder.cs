@@ -9,7 +9,7 @@ namespace MD2
 {
     static class DroidChargerFinder
     {
-        public static Thing ClosestThing_Global_Reachable(IntVec3 center, IEnumerable<Thing> searchSet, PathMode pathMode, TraverseParms traverseParams, float maxDistance, Pawn pawn)
+        public static Thing ClosestThing_Global_Reachable(IntVec3 center, IEnumerable<Thing> searchSet, PathEndMode pathMode, TraverseParms traverseParams, float maxDistance, Pawn pawn)
 		{
 			if (searchSet == null)
 			{

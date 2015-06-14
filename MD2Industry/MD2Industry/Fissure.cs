@@ -8,12 +8,12 @@ using UnityEngine;
 
 namespace MD2
 {
-    public class FissureClass : Thing
+    public class Fissure : Thing
     {
         public FissureSize size;
         private static readonly Texture2D icon = ContentFinder<Texture2D>.Get("Terrain/Fissure");
 
-        public FissureClass()
+        public Fissure()
         {
             int num = Rand.Range(1, 4);
             switch (num)
@@ -32,7 +32,7 @@ namespace MD2
                     break;
             }
         }
-        public FissureClass(FissureSize size)
+        public Fissure(FissureSize size)
         {
             this.size = size;
         }
@@ -52,7 +52,7 @@ namespace MD2
 
         public override IEnumerable<Gizmo> GetGizmos()
         {
-            foreach(var c in base.GetGizmos())
+            foreach (var c in base.GetGizmos())
             {
                 yield return c;
             }
@@ -60,12 +60,17 @@ namespace MD2
             var command = new Command_Action
             {
                 hotKey = Keys.Named("FillInFissure"),
-                icon = FissureClass.icon,
+                icon = Fissure.icon,
                 defaultDesc = "Fills the fissure in",
                 defaultLabel = "Fill in fissure",
                 activateSound = SoundDef.Named("Click"),
-                action = new Action(wantsToFillIn),
-                disabled = false,
+                action = delegate
+                {
+                    Find.LayerStack.Add(new Dialog_Confirm(
+                        "Are you sure you wish to fill in this fissure?",
+                        delegate { DeSpawn(); }));
+                },
+                disabled = HasMiner,
                 groupKey = 313740005
             };
             yield return command;
@@ -75,22 +80,9 @@ namespace MD2
         {
             get
             {
-                Building b = Find.ThingGrid.ThingAt<Extractor>(this.Position);
+                Building b = Find.ThingGrid.ThingAt<Building_Extractor>(this.Position);
                 return b != null;
             }
         }
-
-        private void wantsToFillIn()
-        {
-            if (HasMiner)
-            {
-                string message = "Cannot fill in a fissure when it has an extractor using it.";
-                Messages.Message(message, MessageSound.Reject);
-                return;
-            }
-            else
-                this.DeSpawn();
-        }
-
     }
 }

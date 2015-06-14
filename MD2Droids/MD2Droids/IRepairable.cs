@@ -6,10 +6,10 @@ using Verse;
 
 namespace MD2
 {
-    public interface RepairableDroid
+    public interface IRepairable
     {
         bool BeingRepaired { get; set; }
-        Building_DroidRepairStation RepairStation { get; set; }
+        Building_RepairStation RepairStation { get; set; }
         void RepairTick();
         bool ShouldGetRepairs { get; }
         Pawn Pawn { get; }

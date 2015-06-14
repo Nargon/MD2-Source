@@ -7,7 +7,7 @@ using Verse;
 
 namespace MD2
 {
-    public class UpgradeManager : Saveable
+    public class UpgradeManager : IExposable
     {
         private AssemblyLine parent;
         private List<AssemblyLineUpgradeDef> CompletedUpgrades = new List<AssemblyLineUpgradeDef>();
@@ -53,7 +53,7 @@ namespace MD2
 
         private void FinishUpgrade(AssemblyLineUpgrade upgrade)
         {
-            Messages.Message("UpgradeCompleted".Translate(parent.label, upgrade.Def.label));
+            Messages.Message("UpgradeCompleted".Translate(parent.label, upgrade.Def.label), MessageSound.Benefit);
             parent.AddUpgrade(upgrade);
             UpgradesInProgress.Remove(upgrade);
             CompletedUpgrades.Add(upgrade.Def);
@@ -114,7 +114,7 @@ namespace MD2
                     Rect outRect = new Rect(inRect.AtZero());
                     try
                     {
-                        scrollPosition = Widgets.BeginScrollView(outRect, scrollPosition, viewRect);
+                        Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
 
                         if (UpgradesInProgress.Count > 0)
                         {
@@ -173,7 +173,7 @@ namespace MD2
                     s = upgrade.BillOfMaterials.ReportString;
                 }
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Rect progressRect = new Rect(innerRect.width / 2-(Text.CalcSize(s).x), innerRect.yMin, innerRect.width, innerRect.height);
+                Rect progressRect = new Rect(innerRect.width / 2 - (Text.CalcSize(s).x), innerRect.yMin, innerRect.width, innerRect.height);
                 Widgets.Label(progressRect, s);
             }
             finally

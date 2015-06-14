@@ -9,7 +9,7 @@ using Verse.Sound;
 
 namespace MD2
 {
-    public class OrderConfig : Saveable
+    public class OrderConfig : IExposable
     {
         private BillRepeatMode repeatMode = BillRepeatMode.RepeatCount;
         private Order order;

@@ -35,13 +35,13 @@ namespace MD2
             }
             else
             {
-                Messages.Message("Building must be powered!", MessageSound.Reject);
+                Messages.Message("Building must be powered!", MessageSound.RejectInput);
             }
         }
 
-        public override IEnumerable<FloatMenuOption> FloatMenuOptions(Pawn myPawn)
+        public override IEnumerable<FloatMenuOption> GetFloatMenuOptions(Pawn myPawn)
         {
-            foreach(var m in base.FloatMenuOptions(myPawn))
+            foreach(var m in base.GetFloatMenuOptions(myPawn))
             {
                 yield return m;
             }

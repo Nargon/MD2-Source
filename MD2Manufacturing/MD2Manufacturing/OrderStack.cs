@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class OrderStack : Saveable
+    public class OrderStack : IExposable
     {
         private AssemblyLine line;
         private List<Order> orders = new List<Order>();

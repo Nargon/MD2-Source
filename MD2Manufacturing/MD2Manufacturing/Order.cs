@@ -8,7 +8,7 @@ using RimWorld;
 
 namespace MD2
 {
-    public class Order : Saveable
+    public class Order : IExposable
     {
         private AssemblyLine line;
         private OrderConfig config;
@@ -138,7 +138,8 @@ namespace MD2
                             "\"",
                             Config.Recipe.LabelCap,
                             "\""
-                            }));
+                            }),
+                            MessageSound.Benefit);
                         }
                         break;
                     }
@@ -289,7 +290,7 @@ namespace MD2
             }
         }
 
- 
+
 
         public bool Deleted
         {

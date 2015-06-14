@@ -7,7 +7,7 @@ using RimWorld;
 
 namespace MD2
 {
-    public class BillOfMaterials : Saveable
+    public class BillOfMaterials : IExposable
     {
         public BillOfMaterials(List<ListItem> requiredMaterials, bool instaBuild=false)
         {

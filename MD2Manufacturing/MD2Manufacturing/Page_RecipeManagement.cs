@@ -222,7 +222,7 @@ namespace MD2
             Rect viewRect = new Rect(0f, 0f, availableRecipeMainRect.width - 16f, height);
             Rect outRect = new Rect(availableRecipeMainRect.AtZero());
 
-            this.scrollPosition = Widgets.BeginScrollView(outRect, this.scrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref this.scrollPosition, viewRect);
 
             float currentY = 0f;
             float num3 = 0f;

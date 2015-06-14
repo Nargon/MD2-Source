@@ -8,14 +8,14 @@ namespace MD2
 {
     public class PlaceWorker_MaximumFive : PlaceWorker
     {
-        public override AcceptanceReport AllowsPlacing(EntityDef checkingDef, IntVec3 loc, Rot4 rot)
+        public override AcceptanceReport AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot)
         {
             ThingDef def = checkingDef as ThingDef;
-            if(def!=null)
+            if (def != null)
             {
                 int num = Find.ListerBuildings.allBuildingsColonist.Where((Building b) => b.def == def).Count();
-                num+=Find.ListerThings.ThingsOfDef(def.blueprintDef).Count;
-                if(num<5)
+                num += Find.ListerThings.ThingsOfDef(def.blueprintDef).Count;
+                if (num < 5)
                 {
                     return true;
                 }

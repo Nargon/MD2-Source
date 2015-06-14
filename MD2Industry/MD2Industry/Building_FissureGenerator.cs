@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace MD2
 {
-    public class FissureGenerator : Building
+    public class Building_FissureGenerator : Building
     {
         //Some working variables
         private FissureSize fissureSize = FissureSize.Small;
@@ -47,11 +47,11 @@ namespace MD2
             if (this.running)
             {
                 //Set the power usage according to the fissure size being generated
-                this.powerTrader.powerOutputInt = powerUsage(this.fissureSize);
+                this.powerTrader.powerOutputInt = PowerUsageFor(this.fissureSize);
                 //Check if this has initialised, if not then initialise. This is done only once, when the fissure to produce has been chosen.
                 if (!this.initialised)
                 {
-                    this.tickAmountToGen = randomDigTime(this.fissureSize);
+                    this.tickAmountToGen = RandomDigTimeFrom(this.fissureSize);
                     this.ticksRemaining = this.tickAmountToGen;
                     if (Game.GodMode)
                     {
@@ -66,7 +66,7 @@ namespace MD2
                 {
                     //Spawn the fissure and destroy the generator
                     SoundDef.Named("ChunkRock_Drop").PlayOneShot(this);
-                    makeAndSpawnFissure(fissureSize);
+                    MakeAndSpawnFissure(fissureSize);
                     this.Destroy(DestroyMode.Vanish);
                 }
             }
@@ -82,9 +82,9 @@ namespace MD2
         {
             base.SpawnSetup();
             this.powerTrader = base.GetComp<CompPowerTrader>();
-            FissureGenerator.beginIcon = ContentFinder<Texture2D>.Get("UI/Commands/BeginUI", true);
-            FissureGenerator.pauseIcon = ContentFinder<Texture2D>.Get("UI/Commands/PauseUI", true);
-            FissureGenerator.cycleButton = ContentFinder<Texture2D>.Get("Terrain/Fissure", true);
+            Building_FissureGenerator.beginIcon = ContentFinder<Texture2D>.Get("UI/Commands/BeginUI", true);
+            Building_FissureGenerator.pauseIcon = ContentFinder<Texture2D>.Get("UI/Commands/PauseUI", true);
+            Building_FissureGenerator.cycleButton = ContentFinder<Texture2D>.Get("Terrain/Fissure", true);
         }
 
         //Expose data
@@ -111,7 +111,7 @@ namespace MD2
                 command.defaultLabel = "Begin";
                 string desc = "Click here to begin the drilling process once you have chosen your desired fissure size";
                 command.defaultDesc = desc;
-                command.icon = FissureGenerator.beginIcon;
+                command.icon = Building_FissureGenerator.beginIcon;
             }
             else
             {
@@ -120,31 +120,31 @@ namespace MD2
                     command.defaultLabel = "Pause";
                     string desc2 = "Click here to pause the drilling process";
                     command.defaultDesc = desc2;
-                    command.icon = FissureGenerator.pauseIcon;
+                    command.icon = Building_FissureGenerator.pauseIcon;
                 }
                 else
                 {
                     command.defaultLabel = "Resume";
                     string desc3 = "Click here to resume the drilling process";
                     command.defaultDesc = desc3;
-                    command.icon = FissureGenerator.beginIcon;
+                    command.icon = Building_FissureGenerator.beginIcon;
                 }
             }
             command.hotKey = Keys.BuildingOnOffToggle;
             command.activateSound = SoundDef.Named("Click");
-            command.action = new Action(toggleStarted);
+            command.action = new Action(ToggleStarted);
             command.disabled = false;
             command.groupKey = 313740003;
             yield return command;
             //Cycle through the fissure sizes to generate
             command = new Command_Action
             {
-                icon = FissureGenerator.cycleButton,
+                icon = Building_FissureGenerator.cycleButton,
                 defaultLabel = "Choose Fissure",
                 defaultDesc = "Choose Fissure",
                 hotKey = Keys.FissureGeneratorChangeFissure,
                 activateSound = SoundDef.Named("Click"),
-                action = new Action(cycleThroughFissuresToGenerate),
+                action = new Action(CycleThroughFissuresToGenerate),
                 disabled = false,
                 groupKey = 313740004
             };
@@ -191,7 +191,7 @@ namespace MD2
         }
 
         //Method to get a random time based on the fissure type
-        public int randomDigTime(FissureSize size)
+        public int RandomDigTimeFrom(FissureSize size)
         {
             if (size == FissureSize.Small)
             {
@@ -212,7 +212,7 @@ namespace MD2
             return (int)Rand.Range(25000, 55000);
         }
         //Method to spawn fissure
-        public void makeAndSpawnFissure(FissureSize size, IntVec3 loc)
+        public void MakeAndSpawnFissure(FissureSize size, IntVec3 loc)
         {
             if (size == FissureSize.SteamGeyser)
             {
@@ -220,18 +220,18 @@ namespace MD2
             }
             else
             {
-                FissureClass fis = (FissureClass)ThingMaker.MakeThing(ThingDef.Named("mipFissure"));
+                Fissure fis = (Fissure)ThingMaker.MakeThing(ThingDef.Named("MD2Fissure"));
                 fis.size = size;
                 GenSpawn.Spawn(fis, loc);
             }
         }
         //Overload to use generator base location as location
-        public void makeAndSpawnFissure(FissureSize size)
+        public void MakeAndSpawnFissure(FissureSize size)
         {
-            makeAndSpawnFissure(size, base.Position);
+            MakeAndSpawnFissure(size, base.Position);
         }
 
-        public void toggleStarted()
+        public void ToggleStarted()
         {
             if (!this.started)
             {
@@ -240,7 +240,7 @@ namespace MD2
             this.running = !this.running;
         }
 
-        private void cycleThroughFissuresToGenerate()
+        private void CycleThroughFissuresToGenerate()
         {
             count++;
             if (this.count > 3)
@@ -265,7 +265,7 @@ namespace MD2
             }
         }
 
-        private float powerUsage(FissureSize size)
+        private float PowerUsageFor(FissureSize size)
         {
             switch (size)
             {

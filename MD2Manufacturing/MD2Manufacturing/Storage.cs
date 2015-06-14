@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class Storage : Saveable
+    public class Storage : IExposable
     {
         private AssemblyLine parent;
         private List<ListItem> allStoredItemsList;

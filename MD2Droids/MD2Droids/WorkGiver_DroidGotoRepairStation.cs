@@ -18,24 +18,24 @@ namespace MD2
             }
         }
 
-        public override PathMode PathMode
+        public override PathEndMode PathEndMode
         {
             get
             {
-                return PathMode.InteractionCell;
+                return PathEndMode.InteractionCell;
             }
         }
 
         public override bool ShouldSkip(Pawn pawn)
         {
-            RepairableDroid droid = pawn as RepairableDroid;
+            IRepairable droid = pawn as IRepairable;
             return droid != null && !droid.BeingRepaired && !droid.ShouldGetRepairs;
         }
 
         public override bool HasJobOnThing(Pawn pawn, Thing t)
         {
-            Building_DroidRepairStation rps = t as Building_DroidRepairStation;
-            return rps != null && rps.IsAvailable(pawn) && pawn.CanReserveAndReach(rps, PathMode, Danger.Some, 1);
+            Building_RepairStation rps = t as Building_RepairStation;
+            return rps != null && rps.IsAvailable(pawn) && pawn.CanReserveAndReach(rps, PathEndMode, Danger.Some, 1);
         }
 
         public override Job JobOnThing(Pawn pawn, Thing t)

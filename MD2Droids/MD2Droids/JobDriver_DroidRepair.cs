@@ -8,15 +8,15 @@ using Verse.AI;
 
 namespace MD2
 {
-    public class Job_DroidRepair : JobDriver
+    public class JobDriver_DroidRepair : JobDriver
     {
         private const TargetIndex RepairStationIndex = TargetIndex.A;
 
-        private RepairableDroid Droid
+        private IRepairable Droid
         {
             get
             {
-                return this.pawn as RepairableDroid;
+                return this.pawn as IRepairable;
             }
         }
 
@@ -33,17 +33,17 @@ namespace MD2
             //Reserve the repair station
             yield return Toils_Reserve.Reserve(RepairStationIndex);
             //Go to the repair station interaction cell
-            yield return Toils_Goto.GotoThing(RepairStationIndex, PathMode.InteractionCell);
+            yield return Toils_Goto.GotoThing(RepairStationIndex, PathEndMode.InteractionCell);
             //Make a new toil that sets the droid to repair mode, then wait until fully repaired
-            RepairableDroid droid = pawn as RepairableDroid;
-            Building_DroidRepairStation rps = TargetThingA as Building_DroidRepairStation;
+            IRepairable droid = pawn as IRepairable;
+            Building_RepairStation rps = TargetThingA as Building_RepairStation;
             Toil toil = new Toil();
             toil.FailOnDestroyedOrForbidden(RepairStationIndex);
             toil.FailOn(() =>
                 {
                     Pawn p = toil.GetActor();
-                    Building_DroidRepairStation rps2 = TargetThingA as Building_DroidRepairStation;
-                    if (!(p is RepairableDroid))
+                    Building_RepairStation rps2 = TargetThingA as Building_RepairStation;
+                    if (!(p is IRepairable))
                         return true;
                     if (p.Position != TargetThingA.InteractionCell)
                         return true;
@@ -75,7 +75,7 @@ namespace MD2
             };
             toil.AddEndCondition(delegate
             {
-                RepairableDroid d = toil.GetActor() as RepairableDroid;
+                IRepairable d = toil.GetActor() as IRepairable;
                 if (d != null)
                 {
                     if (d.RepairStation.Power != null && !d.RepairStation.Power.PowerOn)

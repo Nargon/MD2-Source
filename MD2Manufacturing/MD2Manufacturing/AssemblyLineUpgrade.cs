@@ -6,7 +6,7 @@ using Verse;
 
 namespace MD2
 {
-    public class AssemblyLineUpgrade : Saveable
+    public class AssemblyLineUpgrade : IExposable
     {
         private AssemblyLineUpgradeDef def;
         private BillOfMaterials billOfMaterials=new BillOfMaterials();

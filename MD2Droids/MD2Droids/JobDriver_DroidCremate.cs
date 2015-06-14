@@ -8,7 +8,7 @@ using Verse.AI;
 
 namespace MD2
 {
-    public class Job_DroidCremate : JobDriver
+    public class JobDriver_DroidCremate : JobDriver
     {
         private const TargetIndex CorpseIndex = TargetIndex.A;
 
@@ -22,13 +22,13 @@ namespace MD2
             //Reserve the corpse
             yield return Toils_Reserve.Reserve(CorpseIndex);
             //Go to the corpse
-            yield return Toils_Goto.GotoThing(TargetIndex.A, PathMode.ClosestTouch);
+            yield return Toils_Goto.GotoThing(TargetIndex.A, PathEndMode.ClosestTouch);
             Toil toil = new Toil();
             toil.initAction = () =>
                 {
                     //Check if the pawn is set to strip bodies, if yes then strip it, otherwise skip this step
                     Crematorius droid = (Crematorius)pawn;
-                    if (droid.stripBodies)
+                    if (droid.StripBodies)
                     {
                         Corpse corpse = (Corpse)this.TargetA.Thing;
                         if (corpse.AnythingToStrip())
@@ -36,7 +36,7 @@ namespace MD2
                     }
                 };
             toil.defaultCompleteMode = ToilCompleteMode.Delay;
-            toil.defaultDuration = 200;
+            toil.defaultDuration = 300;
             toil.WithEffect(() => DefDatabase<EffecterDef>.GetNamed("Cremate"), CorpseIndex);
             toil.WithSustainer(() => DefDatabase<SoundDef>.GetNamed("Recipe_Cremate"));
             toil.AddFinishAction(() => TargetA.Thing.Destroy());

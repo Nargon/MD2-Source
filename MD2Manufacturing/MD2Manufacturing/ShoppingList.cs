@@ -8,7 +8,7 @@ using Verse;
 
 namespace MD2
 {
-    public class ShoppingList : Saveable
+    public class ShoppingList : IExposable
     {
         private List<ListItem> acquiredMats = new List<ListItem>();
         private List<ListItem> foundItems = new List<ListItem>();

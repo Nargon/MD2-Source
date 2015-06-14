@@ -8,9 +8,9 @@ using Verse;
 
 namespace MD2
 {
-    public class Building_DroidRepairStation : Building
+    public class Building_RepairStation : Building
     {
-        private RepairableDroid droid;
+        private IRepairable repairable;
         private List<CompRepairStationSupplier> suppliers = new List<CompRepairStationSupplier>();
 
         public CompPowerTrader Power
@@ -143,16 +143,16 @@ namespace MD2
             }
         }
 
-        public void RegisterRepairee(RepairableDroid d)
+        public void RegisterRepairee(IRepairable d)
         {
-            this.droid = d;
+            this.repairable = d;
             d.RepairStation = this;
         }
 
-        public void DeregisterRepairee(RepairableDroid d)
+        public void DeregisterRepairee(IRepairable d)
         {
             d.RepairStation = null;
-            droid = null;
+            repairable = null;
         }
 
         public bool IsAvailable(Pawn p)
@@ -166,7 +166,7 @@ namespace MD2
 
         private bool CanUse(Pawn p)
         {
-            return (p is RepairableDroid) && droid == null || droid == p;
+            return (p is IRepairable) && repairable == null || repairable == p;
         }
     }
 }

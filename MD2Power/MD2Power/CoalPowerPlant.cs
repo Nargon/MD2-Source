@@ -13,7 +13,7 @@ namespace MD2
         private static readonly Texture2D Icon = ContentFinder<Texture2D>.Get("Default");
         private float fuel = 0f;
         private float maxFuel = 100f;
-        private float powerOutput;
+        private float powerOutputInt;
         private bool isActive = true, reachedMax = false, takingResources = true;
         private static readonly float fuelConsumptionPerTick = (1f / 300f);
         private CompPowerTrader power;
@@ -30,7 +30,7 @@ namespace MD2
             base.SpawnSetup();
             power = base.GetComp<CompPowerTrader>();
             glower = base.GetComp<CompGlower>();
-            powerOutput = power.powerOutputInt;
+            powerOutputInt = power.powerOutputInt;
         }
 
         public override void Tick()
@@ -55,7 +55,7 @@ namespace MD2
             else
             {
                 com.icon = Icon;
-                com.defaultLabel = "Not activate";
+                com.defaultLabel = "Not active";
                 com.defaultDesc = "Click to activate this building";
             }
             com.disabled = false;
@@ -110,7 +110,7 @@ namespace MD2
                 if (HasFuel && isActive)
                 {
                     UseFuel();
-                    power.powerOutputInt = powerOutput;
+                    power.powerOutputInt = powerOutputInt;
                     if(glower!=null)
                     {
                         glower.Lit = true;
